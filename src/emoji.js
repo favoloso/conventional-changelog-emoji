@@ -63,13 +63,14 @@ const list = [
   emoji("📚", "docs", "patch", true, "📚 Documentation", ["📖"], ["doc"]),
   emoji("🎨", "style", "patch", false, "🎨 Style", ["💄"], ["cleanup"]),
   emoji("♻️", "refactor", "patch", true, "🛠 Improvements"),
-  emoji("🏗", "chore", "patch", true, "🏗 Chore"),
+  emoji("🛠", "improvement", "patch", true, "🛠 Improvements", [], ["imp"]),
+  emoji("⚡️", "perf", "patch", true, "⚡️ Performance", [], ["performance"]),
+  emoji("🏗", "chore", "patch", true, "🏗 Chore", ["⚙️"], ["chores"]),
   emoji("✨", "feat", "minor", true, "✨ Features", ["🌟", "💫", "🌠"]),
   emoji("🚨", "breaking", "major", true, "🚨 Breaking Changes"), // Non rimuovere
-  emoji("🛠", "improvement", "patch", true, "🛠 Improvements"),
   emoji("🚦", "test", "patch", false, "🚦 Test", ["✅"]),
   emoji("🔒", "security", "patch", true, "🔒 Security", ["🔑"]),
-  emoji("📦", "build", "patch", true, "📦 Build"),
+  emoji("📦", "build", "patch", false, "📦 Build", [], ["deps"]),
   emoji("🔖", "release", "patch", false, ""),
   emoji("🚧", "wip", "patch", false, "")
 ];
