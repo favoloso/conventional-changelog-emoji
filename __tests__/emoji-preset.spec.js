@@ -1,49 +1,74 @@
 "use strict";
 var conventionalChangelogCore = require("conventional-changelog-core");
-var gitDummyCommit = require("git-dummy-commit");
 var preset = require("..");
 var fs = require("fs");
 var path = require("path");
 var shell = require("shelljs");
 
-describe("emoji preset", () => {
-  it("should work with all kind of commits", () => {
-    shell.config.silent = true;
-    shell.rm("-rf", "tmp");
-    shell.mkdir("tmp");
-    shell.cd("tmp");
-    shell.mkdir("git-templates");
-    shell.exec("git init --template=./git-templates");
+// Utils
 
-    gitDummyCommit(["✨ Aggiunta nuova feature\n\n🚨 Breaking!"]);
-    gitDummyCommit(["✨ Aggiunto supporto per X Y Z (#55)\nABC"]);
-    gitDummyCommit(["🐛 Corretto un bug (#56)"]);
-    gitDummyCommit(["* WIP temporaneo"]);
-    gitDummyCommit(["🚧 lavori in corso temporaneo"]);
-    gitDummyCommit(["📚 Aggiunta anche la documentazione X Y Z"]);
-    // shell.exec(
-    //   `git commit -m "✨📈 Multi emoji supportate" --allow-empty --no-gpg-sign`
-    // );
+function prepareRepo() {
+  shell.config.silent = true;
+  shell.rm("-rf", "tmp");
+  shell.mkdir("tmp");
+  shell.cd("tmp");
+  shell.mkdir("git-templates");
+  shell.exec("git init --template=./git-templates");
+}
 
-    return new Promise((resolve, reject) => {
-      let filename = path.resolve(__dirname, ".CHANGELOG.md");
-      let results = new fs.createWriteStream(filename);
-      conventionalChangelogCore({
-        config: preset,
-        warn: (...m) => console.log(...m)
+function getChangelog() {
+  return new Promise((resolve, reject) => {
+    let filename = path.resolve(__dirname, ".CHANGELOG.md");
+    let results = new fs.createWriteStream(filename);
+    conventionalChangelogCore({
+      config: preset,
+      warn: (...m) => console.log(...m)
+    })
+      .on("error", err => {
+        reject(err);
       })
-        .on("error", err => {
-          reject(err);
-        })
-        .pipe(results);
+      .pipe(results);
 
-      results.on("finish", () => {
-        let changelog = fs.readFileSync(filename);
-        fs.unlinkSync(filename);
-        resolve(changelog.toString());
-      });
-    }).then(changelog => {
-      console.log(changelog);
+    results.on("finish", () => {
+      let changelog = fs.readFileSync(filename);
+      fs.unlinkSync(filename);
+      resolve(changelog.toString());
+    });
+  });
+}
+
+function gitCommit(message) {
+  shell.exec(`git commit -m "${message}" --allow-empty --no-gpg-sign`);
+}
+
+expect.extend({
+  toContainString(received, expected) {
+    if (this.isNot) {
+      expect(received).not.toEqual(expect.stringContaining(expected));
+    } else {
+      expect(received).toEqual(expect.stringContaining(expected));
+    }
+
+    return { pass: !this.isNot };
+  }
+});
+
+// Test preset
+
+describe("emoji preset", () => {
+  beforeEach(() => {
+    prepareRepo();
+  });
+
+  it("should work with all kind of commits", () => {
+    gitCommit("✨ Aggiunta nuova feature\n\n🚨 Breaking!");
+    gitCommit("✨ Aggiunto supporto per X Y Z (#55)\nABC");
+    gitCommit("🐛 Corretto un bug (#56)");
+    gitCommit("* WIP temporaneo");
+    gitCommit("🚧 lavori in corso temporaneo");
+    gitCommit("📚 Aggiunta anche la documentazione X Y Z");
+
+    return getChangelog().then(changelog => {
       expect(changelog).toEqual(expect.stringContaining("#56"));
       expect(changelog).toEqual(expect.stringContaining("### ✨ Features"));
       expect(changelog).toEqual(expect.stringContaining("### 🐛 Bug Fixes"));
@@ -55,6 +80,21 @@ describe("emoji preset", () => {
       expect(changelog).not.toEqual(expect.stringContaining("🚧"));
       expect(changelog).not.toEqual(expect.stringContaining("Bad"));
       expect(changelog).not.toEqual(expect.stringContaining("#41"));
+    });
+  });
+
+  it("should recognize BREAKING CHANGE note", () => {
+    gitCommit("🐛 Fix feat\n\nBREAKING CHANGE: Xyz");
+    return getChangelog().then(changelog => {
+      expect(changelog).toContainString("### 🚨 Breaking Changes");
+    });
+  });
+
+  it("should ignore emoji after the first one and put them in the subject", () => {
+    gitCommit("🌟🛠 Multiemoji parsing");
+    return getChangelog().then(changelog => {
+      expect(changelog).toContainString("### ✨ Features");
+      expect(changelog).toContainString("Multiemoji");
     });
   });
 });
