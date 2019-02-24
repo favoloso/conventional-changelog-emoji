@@ -22,6 +22,32 @@ npm install --save-dev @favoloso/conventional-changelog-emoji
 conventional-changelog -p @favoloso/emoji -i CHANGELOG.md -s
 ```
 
+## Automatically fix commit messages
+
+This package provides an additional bin script `commit-msg-fix-emoji` that may
+be used in order to fix commits using traditional conventional changelog
+format (i.e. `feat: Add a magic feature`) and transform them in corresponding
+emoji (i.e. `✨ Add a magic feature`).
+
+Install [husky](https://github.com/typicode/husky)
+
+```sh
+yarn add --dev husky
+```
+
+Now in your package.json add:
+
+```json
+{
+  "husky": {
+    "commit-msg": "commit-msg-fix-emoji"
+  }
+}
+```
+
+Now any commit like `<type>: <msg>` will be automatically transformed with related
+emoji. See _Available Emojis_ to see available **types**.
+
 ## Available Emojis
 
 | Emoji | Type        | Version Bump | In Changelog? | Header              |
