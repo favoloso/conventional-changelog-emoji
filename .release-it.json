@@ -6,6 +6,7 @@
   "github": {
     "release": true
   },
+  "increment": "conventional:@favoloso/emoji",
   "scripts": {
     "changelog": "./node_modules/.bin/conventional-changelog -p @favoloso/emoji | tail -n +3",
     "beforeStage": "./node_modules/.bin/conventional-changelog -p @favoloso/emoji -i CHANGELOG.md -s"
