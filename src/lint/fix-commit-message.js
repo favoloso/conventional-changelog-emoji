@@ -3,7 +3,10 @@ const emojiRegex = require("emoji-regex/text")();
 const config = require("../config");
 
 const fixableRegex = new RegExp(`^([a-zA-Z]+)\\:\\s*(.*)$`, "im");
-const emojiAliasedRegex = new RegExp(`^(${emojiRegex.source})?(\\s*)(.*)$`);
+const emojiAliasedRegex = new RegExp(
+  `^(${emojiRegex.source})?(\\s*)(.*)$`,
+  "m"
+);
 
 /**
  * Fix a commit message following project configuration.
