@@ -1,8 +1,13 @@
 {
   "git": {
-    "tagName": "v${version}"
+    "tagName": "v${version}",
+    "commitMessage": "🔖 v${version}"
   },
   "github": {
     "release": true
+  },
+  "scripts": {
+    "changelog": "npx conventional-changelog -p @favoloso/conventional-changelog-emoji | tail -n +3",
+    "beforeStage": "npx conventional-changelog -p @favoloso/conventional-changelog-emoji -i CHANGELOG.md -s"
   }
 }
