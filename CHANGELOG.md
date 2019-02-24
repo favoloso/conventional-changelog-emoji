@@ -1,3 +1,16 @@
+# [0.4.0](https://github.com/favoloso/conventional-changelog-emoji/compare/v0.3.0...v0.4.0) (2019-02-24)
+
+
+### ✨ Features
+
+* Add `showEmojiPerCommit` option ([f6b79b5](https://github.com/favoloso/conventional-changelog-emoji/commit/f6b79b5))
+
+
+### 🏗 Chore
+
+* Add Travis CI ([2a769d8](https://github.com/favoloso/conventional-changelog-emoji/commit/2a769d8))
+
+
 # [0.3.0](https://github.com/favoloso/conventional-changelog-emoji/compare/v0.2.0...v0.3.0) (2019-02-24)
 
 
