@@ -3,7 +3,7 @@ const list = [
   ["📚", "docs", "patch", true, "📚 Documentation"],
   ["🎨", "style", "patch", false, "🎨 Style"],
   ["♻️", "refactor", "patch", true, "🛠 Improvements"],
-  ["🏗", "chore", "patch", false, "🏗 Chore"],
+  ["🏗", "chore", "patch", true, "🏗 Chore"],
   ["✨", "feat", "minor", true, "✨ Features"],
   ["🌟", "feat", "minor", true, "✨ Features"],
   ["🚨", "breaking", "major", true, "🚨 Breaking Changes"], // Non rimuovere
