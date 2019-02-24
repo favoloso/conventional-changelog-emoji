@@ -1,3 +1,13 @@
+## [0.2.0](https://github.com/favoloso/conventional-changelog-emoji/compare/v0.1.2...v0.2.0) (2019-02-24)
+
+
+### ✨ Features
+
+* Aggiunto fix dei commit con un git hook ([018ccb9](https://github.com/favoloso/conventional-changelog-emoji/commit/018ccb9))
+
+### 📚 Documentation
+
+* Aggiunta documentazione per l'hook commit-msg ([ff82be8](https://github.com/favoloso/conventional-changelog-emoji/commit/ff82be8))
 ## [0.1.2](https://github.com/favoloso/conventional-changelog-emoji/compare/v0.1.1...v0.1.2) (2019-02-24)
 
 
