@@ -63,6 +63,12 @@ The package works as-is, but its behaviour may be customized with the following 
 
   In the changelog, shows emoji for each commit. In the default mode (`false`), emojis are omitted from commits and only the heading contains them (i.e. `🐛 Bug Fixes`)
 
+- **`minorForBreakingInDevelopment`** (default: `true`)
+
+  Breaking changes during development will be considered as _minor_ instead of _major_ bumps (see [semver spec](https://semver.org/#spec-item-4)).
+
+  > 4.  Major version zero (0.y.z) is for initial development. Anything may change at any time. The public API should not be considered stable.
+
 ### Example config in package.json
 
 ```json

@@ -12,6 +12,7 @@ function prepareRepo() {
   shell.cd("tmp");
   shell.mkdir("git-templates");
   shell.exec("git init --template=./git-templates");
+  shell.exec(`git commit -m "initial commit" --allow-empty --no-gpg-sign`);
 }
 
 function getChangelog() {
@@ -37,8 +38,32 @@ function getChangelog() {
   });
 }
 
+function getBump() {
+  return new Promise((resolve, reject) => {
+    const preset = require("..");
+    const conventionalRecommendedBump = require("conventional-recommended-bump");
+    conventionalRecommendedBump(
+      {
+        config: preset,
+        warn: (...m) => console.log(...m)
+      },
+      (error, recommendation) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(recommendation);
+        }
+      }
+    );
+  });
+}
+
 function gitCommit(message) {
   shell.exec(`git commit -m "${message}" --allow-empty --no-gpg-sign`);
+}
+
+function gitTag(tag) {
+  shell.exec(`git tag -a ${tag} -m "version ${tag}"`);
 }
 
 expect.extend({
@@ -60,6 +85,10 @@ describe("emoji preset", () => {
     jest.resetModules();
     jest.setMock("../src/config", require("../src/config-default"));
     prepareRepo();
+  });
+
+  afterEach(() => {
+    shell.cd("..");
   });
 
   it("should work with all kind of commits", () => {
@@ -112,6 +141,68 @@ describe("emoji preset", () => {
     jest.setMock("../src/config", { showEmojiPerCommit: true });
     return getChangelog().then(changelog => {
       expect(changelog).toContainString("* 🐛 fixed a bug");
+    });
+  });
+
+  describe("version bump", () => {
+    it("should recommend patch for fixes only", () => {
+      gitCommit("🐛 fixed a bug");
+      return getBump().then(recommendation => {
+        expect(recommendation.releaseType).toEqual("patch");
+      });
+    });
+
+    it("should recommend patch for other kind of small tasks", () => {
+      gitCommit("⚙️ chore something");
+      gitCommit("♻️ refactor a b c");
+      return getBump().then(recommendation => {
+        expect(recommendation.releaseType).toEqual("patch");
+      });
+    });
+
+    it("should recommend minor for features", () => {
+      gitCommit("🐛 fixed a bug");
+      gitCommit("✨ sparkles joy with new feat");
+      return getBump().then(recommendation => {
+        expect(recommendation.releaseType).toEqual("minor");
+      });
+    });
+
+    it("should recommend major for breaking changes", () => {
+      gitTag("v1.0.0");
+      gitCommit("🐛 fixed a bug");
+      gitCommit("✨ sparkles joy with new feat\n\nBREAKING CHANGE xyz");
+      return getBump().then(recommendation => {
+        expect(recommendation.releaseType).toEqual("major");
+      });
+    });
+
+    it("should allow 🚨 for breaking changes", () => {
+      gitTag("v1.0.0");
+      gitCommit("🐛 fixed a bug");
+      gitCommit("✨ sparkles joy with new feat\n\n🚨 xyz");
+      return getBump().then(recommendation => {
+        console.log(recommendation);
+        expect(recommendation.releaseType).toEqual("major");
+      });
+    });
+
+    it("should put breaking changes into a minor in development", () => {
+      gitTag("v0.3.2");
+      gitCommit("✨ sparkles joy with new feat\n\n🚨 breaking");
+      jest.setMock("../src/config", { minorForBreakingInDevelopment: true });
+      return getBump().then(recommendation => {
+        expect(recommendation.releaseType).toEqual("minor");
+      });
+    });
+
+    it("should put breaking changes into a major if configured", () => {
+      gitTag("v0.3.2");
+      gitCommit("✨ sparkles joy with new feat\n\n🚨 breaking");
+      jest.setMock("../src/config", { minorForBreakingInDevelopment: false });
+      return getBump().then(recommendation => {
+        expect(recommendation.releaseType).toEqual("major");
+      });
     });
   });
 });
