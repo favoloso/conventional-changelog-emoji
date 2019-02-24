@@ -1,3 +1,13 @@
+## [0.1.2](https://github.com/favoloso/conventional-changelog-emoji/compare/v0.1.1...v0.1.2) (2019-02-24)
+
+
+### 📚 Documentation
+
+* Add base README info ([5a75760](https://github.com/favoloso/conventional-changelog-emoji/commit/5a75760))
+
+### 🛠 Improvements
+
+* Rilassati vincoli, ora i chore vengono elencati nel changelog ([a14a35e](https://github.com/favoloso/conventional-changelog-emoji/commit/a14a35e))
 ## [0.1.1](https://github.com/favoloso/conventional-changelog-emoji/compare/v0.1.0...v0.1.1) (2019-02-24)
 
 ## 0.1.0 (2019-02-24)
