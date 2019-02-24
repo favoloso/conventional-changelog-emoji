@@ -16,8 +16,9 @@ const SEVERITY = {
 module.exports = Q.all([
   readFile(resolve(__dirname, "./templates/template.hbs"), "utf-8"),
   readFile(resolve(__dirname, "./templates/header.hbs"), "utf-8"),
-  readFile(resolve(__dirname, "./templates/commit.hbs"), "utf-8")
-]).spread((template, header, commit) => {
+  readFile(resolve(__dirname, "./templates/commit.hbs"), "utf-8"),
+  readFile(resolve(__dirname, "./templates/footer.hbs"), "utf-8")
+]).spread((template, header, commit, footer) => {
   let groups = emoji.list.reduce((groups, record) => {
     let [emoji, type, bump, includeInChangelog, heading] = record;
     groups[emoji] = {
@@ -35,6 +36,7 @@ module.exports = Q.all([
   opts.mainTemplate = template;
   opts.headerPartial = header;
   opts.commitPartial = commit;
+  opts.footerPartial = footer;
 
   return opts;
 });

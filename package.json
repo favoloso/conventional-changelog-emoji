@@ -3,7 +3,10 @@
   "version": "0.0.1",
   "description": "Conventional Changelog with Emojis support",
   "main": "index.js",
-  "repository": "https://github.com/favoloso/conventional-changelog-emoji.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/favoloso/conventional-changelog-emoji.git"
+  },
   "author": "Leonardo Ascione <leonardo@favoloso.team>",
   "license": "MIT",
   "scripts": {
