@@ -53,7 +53,7 @@ emoji. See _Available Emojis_ to see available **types**.
 
 The package works as-is, but its behaviour may be customized with the following options.
 
-> _Note:_ This package supports [`cosmiconfig`](https://github.com/davidtheclark/cosmiconfig#readme) to provide configuration options with `favoloso-emoji` module name.
+> _Note:_ This package supports [`cosmiconfig`](https://github.com/davidtheclark/cosmiconfig#readme) to provide configuration options with `favolosoEmoji` module name.
 
 - **`fixAliasedEmoji`** (default: `false`)
 
@@ -67,7 +67,7 @@ The package works as-is, but its behaviour may be customized with the following 
 
 ```json
 {
-  "favoloso-emoji": {
+  "favolosoEmoji": {
     "fixAliasedEmoji": true,
     "showEmojiPerCommit": false
   }

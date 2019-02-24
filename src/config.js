@@ -1,6 +1,6 @@
 const cosmiconfig = require("cosmiconfig");
 
-const explorer = cosmiconfig("favoloso-emoji");
+const explorer = cosmiconfig("favolosoEmoji");
 const loadedConfig = explorer.searchSync();
 const config = {
   ...require("./config-default"),

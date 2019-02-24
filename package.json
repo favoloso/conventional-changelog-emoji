@@ -38,7 +38,7 @@
   "bin": {
     "favoloso-emoji-fix-commit": "./src/bin/favoloso-emoji-fix-commit.js"
   },
-  "favoloso-emoji": {
+  "favolosoEmoji": {
     "fixAliasedEmoji": true
   },
   "husky": {
