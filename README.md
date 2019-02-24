@@ -24,7 +24,7 @@ conventional-changelog -p @favoloso/emoji -i CHANGELOG.md -s
 
 ## Automatically fix commit messages
 
-This package provides an additional bin script `commit-msg-fix-emoji` that may
+This package provides an additional bin script `favoloso-emoji-fix-commit` that may
 be used in order to fix commits using traditional conventional changelog
 format (i.e. `feat: Add a magic feature`) and transform them in corresponding
 emoji (i.e. `✨ Add a magic feature`).
