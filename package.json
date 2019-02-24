@@ -11,6 +11,7 @@
   "license": "MIT",
   "scripts": {
     "test": "jest",
+    "test:ci": "jest --ci --runInBand",
     "release": "release-it"
   },
   "files": [
