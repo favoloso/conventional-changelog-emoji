@@ -19,19 +19,7 @@ module.exports = Q.all([
   readFile(resolve(__dirname, "./templates/commit.hbs"), "utf-8"),
   readFile(resolve(__dirname, "./templates/footer.hbs"), "utf-8")
 ]).spread((template, header, commit, footer) => {
-  let groups = emoji.list.reduce((groups, record) => {
-    let [emoji, type, bump, includeInChangelog, heading] = record;
-    groups[emoji] = {
-      heading,
-      type,
-      versionBump: bump,
-      severity: SEVERITY[bump],
-      includeInChangelog
-    };
-    return groups;
-  }, {});
-
-  const opts = getWriterOpts(groups);
+  const opts = getWriterOpts();
 
   opts.mainTemplate = template;
   opts.headerPartial = header;
@@ -41,16 +29,15 @@ module.exports = Q.all([
   return opts;
 });
 
-function getWriterOpts(groups) {
-  let breakingHeading = emoji.list.find(e => e[1] === "breaking")[4];
+function getWriterOpts() {
+  let breakingHeading = emoji.list.find(e => e.type === "breaking").heading;
 
   return {
     transform(commit, context) {
       let issues = [];
-
       if (commit.emoji != null) {
-        const group = groups[commit.emoji];
-        if (group == null || !group.includeInChangelog) return null;
+        const group = emoji.findEmoji(commit.emoji);
+        if (group == null || !group.inChangelog) return null;
 
         commit.type = group.heading;
       } else {

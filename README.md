@@ -40,7 +40,7 @@ Now in your package.json add:
 ```json
 {
   "husky": {
-    "commit-msg": "commit-msg-fix-emoji"
+    "commit-msg": "favoloso-emoji-fix-commit"
   }
 }
 ```
@@ -48,21 +48,38 @@ Now in your package.json add:
 Now any commit like `<type>: <msg>` will be automatically transformed with related
 emoji. See _Available Emojis_ to see available **types**.
 
+### Additional configuration
+
+> This package supports [`cosmiconfig`](https://github.com/davidtheclark/cosmiconfig#readme) to provide configuration options with `favoloso-emoji` module name.
+
+- **`fixAliasedEmoji`** (default: `false`)
+
+  Replaces aliased emojis (like 🌠) with default one (like ✨)
+
+#### Example config in package.json
+
+```json
+{
+  "favoloso-emoji": {
+    "fixAliasedEmoji": true
+  }
+}
+```
+
 ## Available Emojis
 
-| Emoji | Type        | Version Bump | In Changelog? | Header              |
-| ----- | ----------- | ------------ | ------------- | ------------------- |
-| 🐛    | bug         | patch        | true          | 🐛 Bug Fixes        |
-| 📚    | docs        | patch        | true          | 📚 Documentation    |
-| 🎨    | style       | patch        | false         | 🎨 Style            |
+| Emoji | Type        | Version Bump | In Changelog? | Header              | Aliases  |
+| ----- | ----------- | ------------ | ------------- | ------------------- | -------- |
+| 🐛    | fix         | patch        | true          | 🐛 Bug Fixes        | 🐞       |
+| 📚    | docs        | patch        | true          | 📚 Documentation    | 📖       |
+| 🎨    | style       | patch        | false         | 🎨 Style            | 💄       |
 | ♻️    | refactor    | patch        | true          | 🛠 Improvements      |
 | 🏗     | chore       | patch        | true          | 🏗 Chore             |
-| ✨    | feat        | minor        | true          | ✨ Features         |
-| 🌟    | feat        | minor        | true          | ✨ Features         |
+| ✨    | feat        | minor        | true          | ✨ Features         | 🌟,🌠,💫 |
 | 🚨    | breaking    | major        | true          | 🚨 Breaking Changes |
 | 🛠     | improvement | patch        | true          | 🛠 Improvements      |
-| 🚦    | test        | patch        | false         | 🚦 Test             |
-| 🔒    | security    | patch        | true          | 🔒 Security         |
-| 📦    | deps        | patch        | true          | 📦 Dependencies     |
+| 🚦    | test        | patch        | false         | 🚦 Test             | ✅       |
+| 🔒    | security    | patch        | true          | 🔒 Security         | 🔑       |
+| 📦    | build       | patch        | true          | 📦 Build            |
 | 🔖    | release     | patch        | false         |                     |
 | 🚧    | wip         | patch        | false         |                     |

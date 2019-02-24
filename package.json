@@ -21,6 +21,7 @@
     "access": "public"
   },
   "dependencies": {
+    "cosmiconfig": "^5.1.0",
     "emoji-regex": "^7.0.3",
     "q": "^1.5.1"
   },
@@ -35,11 +36,14 @@
     "shelljs": "^0.8.3"
   },
   "bin": {
-    "commit-msg-fix-emoji": "./src/hooks/commit-message-emoji.js"
+    "favoloso-emoji-fix-commit": "./src/bin/favoloso-emoji-fix-commit.js"
+  },
+  "favoloso-emoji": {
+    "fixAliasedEmoji": true
   },
   "husky": {
     "hooks": {
-      "commit-msg": "commit-msg-fix-emoji"
+      "commit-msg": "favoloso-emoji-fix-commit"
     }
   }
 }

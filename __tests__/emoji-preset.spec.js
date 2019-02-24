@@ -1,13 +1,13 @@
 "use strict";
 var conventionalChangelogCore = require("conventional-changelog-core");
 var gitDummyCommit = require("git-dummy-commit");
-var preset = require("../");
+var preset = require("..");
 var fs = require("fs");
 var path = require("path");
 var shell = require("shelljs");
 
 describe("emoji preset", () => {
-  it("should work if there is no semver tag", () => {
+  it("should work with all kind of commits", () => {
     shell.config.silent = true;
     shell.rm("-rf", "tmp");
     shell.mkdir("tmp");
