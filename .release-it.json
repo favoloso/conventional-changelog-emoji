@@ -7,7 +7,7 @@
     "release": true
   },
   "scripts": {
-    "changelog": "npx conventional-changelog -p @favoloso/conventional-changelog-emoji | tail -n +3",
-    "beforeStage": "npx conventional-changelog -p @favoloso/conventional-changelog-emoji -i CHANGELOG.md -s"
+    "changelog": "./node_modules/.bin/conventional-changelog -p @favoloso/emoji | tail -n +3",
+    "beforeStage": "./node_modules/.bin/conventional-changelog -p @favoloso/emoji -i CHANGELOG.md -s"
   }
 }

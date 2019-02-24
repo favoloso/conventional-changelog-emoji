@@ -5,8 +5,6 @@ const emoji = require("./emoji");
 
 const pattern = new RegExp(`^(${emojiRegex.source})?(\\s*)(.*)$`);
 
-console.log("hello!");
-
 module.exports = {
   headerPattern: pattern,
   headerCorrespondence: ["emoji", "_", "subject"],
