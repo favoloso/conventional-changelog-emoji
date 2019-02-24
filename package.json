@@ -29,8 +29,17 @@
     "conventional-changelog-cli": "^2.0.12",
     "conventional-changelog-core": "^3.1.6",
     "git-dummy-commit": "^1.3.0",
+    "husky": "^1.3.1",
     "jest": "^24.1.0",
     "release-it": "^10.1.0",
     "shelljs": "^0.8.3"
+  },
+  "bin": {
+    "commit-msg-fix-emoji": "./src/hooks/commit-message-emoji.js"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commit-msg-fix-emoji"
+    }
   }
 }
