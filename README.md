@@ -25,12 +25,12 @@ conventional-changelog -p @favoloso/emoji -i CHANGELOG.md -s
 
 ## Automatically fix commit messages
 
-This package provides an additional bin script `favoloso-emoji-fix-commit` that may
-be used in order to fix commits using traditional conventional changelog
-format (i.e. `feat: Add a magic feature`) and transform them in corresponding
-emoji (i.e. `✨ Add a magic feature`).
+This package provides an additional bin script `favoloso-emoji-fix-commit`.
 
-Install [husky](https://github.com/typicode/husky)
+The scripts **changes commit messages**, from traditional conventional changelog
+format (i.e. `feat: Add a magic feature`), to corresponding emoji (i.e. `✨ Add a magic feature`).
+
+To use it, install [husky](https://github.com/typicode/husky)
 
 ```sh
 yarn add --dev husky
@@ -49,20 +49,27 @@ Now in your package.json add:
 Now any commit like `<type>: <msg>` will be automatically transformed with related
 emoji. See _Available Emojis_ to see available **types**.
 
-### Additional configuration
+## Configuration
 
-> This package supports [`cosmiconfig`](https://github.com/davidtheclark/cosmiconfig#readme) to provide configuration options with `favoloso-emoji` module name.
+The package works as-is, but its behaviour may be customized with the following options.
+
+> _Note:_ This package supports [`cosmiconfig`](https://github.com/davidtheclark/cosmiconfig#readme) to provide configuration options with `favoloso-emoji` module name.
 
 - **`fixAliasedEmoji`** (default: `false`)
 
   Replaces aliased emojis (like 🌠) with default one (like ✨)
 
-#### Example config in package.json
+- **`showEmojiPerCommit`** (default: `false`)
+
+  In the changelog, shows emoji for each commit. In the default mode (`false`), emojis are omitted from commits and only the heading contains them (i.e. `🐛 Bug Fixes`)
+
+### Example config in package.json
 
 ```json
 {
   "favoloso-emoji": {
-    "fixAliasedEmoji": true
+    "fixAliasedEmoji": true,
+    "showEmojiPerCommit": false
   }
 }
 ```

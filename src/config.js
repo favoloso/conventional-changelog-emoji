@@ -3,7 +3,7 @@ const cosmiconfig = require("cosmiconfig");
 const explorer = cosmiconfig("favoloso-emoji");
 const loadedConfig = explorer.searchSync();
 const config = {
-  fixAliasedEmoji: false,
+  ...require("./config-default"),
   ...(loadedConfig ? loadedConfig.config : null)
 };
 

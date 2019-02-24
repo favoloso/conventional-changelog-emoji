@@ -132,8 +132,9 @@
     to-fast-properties "^2.0.0"
 
 "@favoloso/conventional-changelog-emoji@file:./.":
-  version "0.2.0"
+  version "0.3.0"
   dependencies:
+    cosmiconfig "^5.1.0"
     emoji-regex "^7.0.3"
     q "^1.5.1"
 
@@ -1752,14 +1753,6 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-git-dummy-commit@^1.3.0:
-  version "1.3.0"
-  resolved "https://registry.npmjs.org/git-dummy-commit/-/git-dummy-commit-1.3.0.tgz#b098cd300818eb28aa40c49fffcc6da47292a2e8"
-  integrity sha1-sJjNMAgY6yiqQMSf/8xtpHKSoug=
-  dependencies:
-    meow "^3.6.0"
-    shelljs "^0.7.3"
-
 git-raw-commits@2.0.0:
   version "2.0.0"
   resolved "https://registry.npmjs.org/git-raw-commits/-/git-raw-commits-2.0.0.tgz#d92addf74440c14bcc5c83ecce3fb7f8a79118b5"
@@ -3184,7 +3177,7 @@ mem@^4.0.0:
     mimic-fn "^1.0.0"
     p-is-promise "^2.0.0"
 
-meow@^3.3.0, meow@^3.6.0:
+meow@^3.3.0:
   version "3.7.0"
   resolved "https://registry.npmjs.org/meow/-/meow-3.7.0.tgz#72cb668b425228290abbfa856892587308a801fb"
   integrity sha1-cstmi0JSKCkKu/qFaJJYcwioAfs=
@@ -4403,15 +4396,6 @@ shelljs@0.8.3, shelljs@^0.8.3:
   version "0.8.3"
   resolved "https://registry.npmjs.org/shelljs/-/shelljs-0.8.3.tgz#a7f3319520ebf09ee81275b2368adb286659b097"
   integrity sha512-fc0BKlAWiLpwZljmOvAOTE/gXawtCoNrP5oaY7KIaQbbyHeQVg01pSEuEGvGh3HEdBU4baCD7wQBwADmM/7f7A==
-  dependencies:
-    glob "^7.0.0"
-    interpret "^1.0.0"
-    rechoir "^0.6.2"
-
-shelljs@^0.7.3:
-  version "0.7.8"
-  resolved "https://registry.npmjs.org/shelljs/-/shelljs-0.7.8.tgz#decbcf874b0d1e5fb72e14b164a9683048e9acb3"
-  integrity sha1-3svPh0sNHl+3LhSxZKloMEjprLM=
   dependencies:
     glob "^7.0.0"
     interpret "^1.0.0"

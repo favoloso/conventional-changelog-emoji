@@ -1,9 +1,7 @@
 "use strict";
-var conventionalChangelogCore = require("conventional-changelog-core");
-var preset = require("..");
-var fs = require("fs");
-var path = require("path");
-var shell = require("shelljs");
+const fs = require("fs");
+const path = require("path");
+const shell = require("shelljs");
 
 // Utils
 
@@ -18,6 +16,8 @@ function prepareRepo() {
 
 function getChangelog() {
   return new Promise((resolve, reject) => {
+    const preset = require("..");
+    const conventionalChangelogCore = require("conventional-changelog-core");
     let filename = path.resolve(__dirname, ".CHANGELOG.md");
     let results = new fs.createWriteStream(filename);
     conventionalChangelogCore({
@@ -57,6 +57,8 @@ expect.extend({
 
 describe("emoji preset", () => {
   beforeEach(() => {
+    jest.resetModules();
+    jest.setMock("../src/config", require("../src/config-default"));
     prepareRepo();
   });
 
@@ -95,6 +97,21 @@ describe("emoji preset", () => {
     return getChangelog().then(changelog => {
       expect(changelog).toContainString("### ✨ Features");
       expect(changelog).toContainString("Multiemoji");
+    });
+  });
+
+  it("should not print emojis for each commit by default", () => {
+    gitCommit("🐛 fixed a bug");
+    return getChangelog().then(changelog => {
+      expect(changelog).toContainString("* fixed a bug");
+    });
+  });
+
+  it("should print emojis for each commit if `showEmojiPerCommit` is provided", () => {
+    gitCommit("🐛 fixed a bug");
+    jest.setMock("../src/config", { showEmojiPerCommit: true });
+    return getChangelog().then(changelog => {
+      expect(changelog).toContainString("* 🐛 fixed a bug");
     });
   });
 });

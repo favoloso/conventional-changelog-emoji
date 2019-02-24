@@ -4,6 +4,7 @@ const Q = require("q");
 const readFile = Q.denodeify(require("fs").readFile);
 const resolve = require("path").resolve;
 const emoji = require("./emoji");
+const config = require("./config");
 
 const SEVERITY = {
   skip: 0,
@@ -48,6 +49,10 @@ function getWriterOpts() {
       commit.notes.forEach(note => {
         note.title = breakingHeading;
       });
+
+      if (config.showEmojiPerCommit) {
+        commit.showEmoji = commit.emoji;
+      }
 
       if (typeof commit.hash === `string`) {
         commit.hash = commit.hash.substring(0, 7);
