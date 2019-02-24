@@ -1,6 +1,6 @@
 {
   "name": "@favoloso/conventional-changelog-emoji",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Conventional Changelog with Emojis support",
   "main": "index.js",
   "repository": {

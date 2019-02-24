@@ -1,3 +1,17 @@
+## [0.4.1](https://github.com/favoloso/conventional-changelog-emoji/compare/v0.4.0...v0.4.1) (2019-02-24)
+
+
+### 🐛 Bug Fixes
+
+* Fix bug in aliased emoji replacement ([395c15d](https://github.com/favoloso/conventional-changelog-emoji/commit/395c15d))
+
+
+### 🛠 Improvements
+
+* Enhance list of emojis and aliases ([a62dd58](https://github.com/favoloso/conventional-changelog-emoji/commit/a62dd58))
+* Rename cosmiconfig module to "favolosoEmoji" ([e0b8f5b](https://github.com/favoloso/conventional-changelog-emoji/commit/e0b8f5b))
+
+
 # [0.4.0](https://github.com/favoloso/conventional-changelog-emoji/compare/v0.3.0...v0.4.0) (2019-02-24)
 
 
