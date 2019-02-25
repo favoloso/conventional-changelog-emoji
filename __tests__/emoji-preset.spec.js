@@ -6,7 +6,9 @@ const shell = require("shelljs");
 // Utils
 
 function prepareRepo() {
+  const root = path.resolve(__dirname, "..");
   shell.config.silent = true;
+  shell.cd(root);
   shell.rm("-rf", "tmp");
   shell.mkdir("tmp");
   shell.cd("tmp");
