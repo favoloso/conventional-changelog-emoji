@@ -4,6 +4,7 @@ const path = require("path");
 const shell = require("shelljs");
 
 const root = path.resolve(__dirname, "..");
+const tmp = path.resolve(root, "tmp");
 
 // Utils
 
@@ -62,12 +63,12 @@ function getBump() {
 }
 
 function gitCommit(message) {
-  shell.cd(root);
+  shell.cd(tmp);
   shell.exec(`git commit -m "${message}" --allow-empty --no-gpg-sign`);
 }
 
 function gitTag(tag) {
-  shell.cd(root);
+  shell.cd(tmp);
   shell.exec(`git tag -a ${tag} -m "version ${tag}"`);
 }
 
