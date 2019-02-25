@@ -3,10 +3,11 @@ const fs = require("fs");
 const path = require("path");
 const shell = require("shelljs");
 
+const root = path.resolve(__dirname, "..");
+
 // Utils
 
 function prepareRepo() {
-  const root = path.resolve(__dirname, "..");
   shell.config.silent = true;
   shell.cd(root);
   shell.rm("-rf", "tmp");
@@ -61,10 +62,12 @@ function getBump() {
 }
 
 function gitCommit(message) {
+  shell.cd(root);
   shell.exec(`git commit -m "${message}" --allow-empty --no-gpg-sign`);
 }
 
 function gitTag(tag) {
+  shell.cd(root);
   shell.exec(`git tag -a ${tag} -m "version ${tag}"`);
 }
 
@@ -184,7 +187,6 @@ describe("emoji preset", () => {
       gitCommit("🐛 fixed a bug");
       gitCommit("✨ sparkles joy with new feat\n\n🚨 xyz");
       return getBump().then(recommendation => {
-        console.log(recommendation);
         expect(recommendation.releaseType).toEqual("major");
       });
     });
