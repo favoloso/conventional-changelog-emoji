@@ -1,6 +1,7 @@
 # @favoloso/conventional-changelog-emoji
 
 [![Travis CI](https://img.shields.io/travis/com/favoloso/conventional-changelog-emoji.svg)](https://travis-ci.com/favoloso/conventional-changelog-emoji)
+[![Coveralls](https://img.shields.io/coveralls/github/favoloso/conventional-changelog-emoji/master.svg)](https://coveralls.io/github/favoloso/conventional-changelog-emoji)
 [![npm](https://img.shields.io/npm/v/@favoloso/conventional-changelog-emoji.svg)](https://www.npmjs.com/package/@favoloso/conventional-changelog-emoji)
 
 Conventional Changelog with Emojis support 🎉
