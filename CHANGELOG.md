@@ -1,3 +1,23 @@
+# [0.5.0](https://github.com/favoloso/conventional-changelog-emoji/compare/v0.4.1...v0.5.0) (2019-02-25)
+
+
+### ✨ Features
+
+* Add `minorForBreakingInDevelopment` config option ([8824c35](https://github.com/favoloso/conventional-changelog-emoji/commit/8824c35))
+
+
+### 🏗 Chore
+
+* Add coverage reporting with Codecov ([ca50e15](https://github.com/favoloso/conventional-changelog-emoji/commit/ca50e15))
+* Add coveralls ([f590aeb](https://github.com/favoloso/conventional-changelog-emoji/commit/f590aeb))
+* Use yarn caching for Travis ([ddf4623](https://github.com/favoloso/conventional-changelog-emoji/commit/ddf4623))
+
+
+### 📚 Documentation
+
+* Add Coveralls badge ([866a3b0](https://github.com/favoloso/conventional-changelog-emoji/commit/866a3b0))
+
+
 ## [0.4.1](https://github.com/favoloso/conventional-changelog-emoji/compare/v0.4.0...v0.4.1) (2019-02-24)
 
 
