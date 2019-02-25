@@ -7,3 +7,5 @@ install:
   - yarn --pure-lockfile
 script:
   - yarn test:ci
+after_success:
+  - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
