@@ -1,36 +1,10 @@
-"use strict";
+const emoji = require("../../emoji/emoji");
+const config = require("../../config/config");
 
-const Q = require("q");
-const readFile = Q.denodeify(require("fs").readFile);
-const resolve = require("path").resolve;
-const emoji = require("./emoji");
-const config = require("./config");
-
-const SEVERITY = {
-  skip: 0,
-  patch: 0,
-  minor: 1,
-  major: 2,
-  breaking: 2
-};
-
-module.exports = Q.all([
-  readFile(resolve(__dirname, "./templates/template.hbs"), "utf-8"),
-  readFile(resolve(__dirname, "./templates/header.hbs"), "utf-8"),
-  readFile(resolve(__dirname, "./templates/commit.hbs"), "utf-8"),
-  readFile(resolve(__dirname, "./templates/footer.hbs"), "utf-8")
-]).spread((template, header, commit, footer) => {
-  const opts = getWriterOpts();
-
-  opts.mainTemplate = template;
-  opts.headerPartial = header;
-  opts.commitPartial = commit;
-  opts.footerPartial = footer;
-
-  return opts;
-});
-
-function getWriterOpts() {
+/**
+ * Factory to build conventional-changelog `writerOpts`.
+ */
+module.exports = function getWriterOpts() {
   let breakingHeading = emoji.list.find(e => e.type === "breaking").heading;
 
   return {
@@ -97,4 +71,4 @@ function getWriterOpts() {
     commitsSort: ["scope", "subject"],
     noteGroupsSort: "title"
   };
-}
+};

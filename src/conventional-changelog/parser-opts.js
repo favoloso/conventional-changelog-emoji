@@ -1,7 +1,7 @@
 "use strict";
 
 const emojiRegex = require("emoji-regex/text")();
-const emoji = require("./emoji");
+const emoji = require("../emoji/emoji");
 
 const pattern = new RegExp(`^(${emojiRegex.source})?(\\s*)(.*)$`);
 

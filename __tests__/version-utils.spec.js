@@ -1,4 +1,4 @@
-const versionUtils = require("../src/version-utils");
+const versionUtils = require("../src/utils/version-utils");
 
 describe("version utils", () => {
   it("should recognize initial versions (semver)", () => {

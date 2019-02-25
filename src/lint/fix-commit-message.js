@@ -1,6 +1,6 @@
-const emoji = require("../emoji");
+const emoji = require("../emoji/emoji");
 const emojiRegex = require("emoji-regex/text")();
-const config = require("../config");
+const config = require("../config/config");
 
 const fixableRegex = new RegExp(`^([a-zA-Z]+)\\:\\s*(.*)$`, "im");
 const emojiAliasedRegex = new RegExp(

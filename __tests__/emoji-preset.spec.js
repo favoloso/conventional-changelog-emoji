@@ -89,7 +89,10 @@ expect.extend({
 describe("emoji preset", () => {
   beforeEach(() => {
     jest.resetModules();
-    jest.setMock("../src/config", require("../src/config-default"));
+    jest.setMock(
+      "../src/config/config",
+      require("../src/config/config-default")
+    );
     prepareRepo();
   });
 
@@ -144,7 +147,7 @@ describe("emoji preset", () => {
 
   it("should print emojis for each commit if `showEmojiPerCommit` is provided", () => {
     gitCommit("🐛 fixed a bug");
-    jest.setMock("../src/config", { showEmojiPerCommit: true });
+    jest.setMock("../src/config/config", { showEmojiPerCommit: true });
     return getChangelog().then(changelog => {
       expect(changelog).toContainString("* 🐛 fixed a bug");
     });
@@ -195,7 +198,9 @@ describe("emoji preset", () => {
     it("should put breaking changes into a minor in development", () => {
       gitTag("v0.3.2");
       gitCommit("✨ sparkles joy with new feat\n\n🚨 breaking");
-      jest.setMock("../src/config", { minorForBreakingInDevelopment: true });
+      jest.setMock("../src/config/config", {
+        minorForBreakingInDevelopment: true
+      });
       return getBump().then(recommendation => {
         expect(recommendation.releaseType).toEqual("minor");
       });
@@ -204,7 +209,9 @@ describe("emoji preset", () => {
     it("should put breaking changes into a major if configured", () => {
       gitTag("v0.3.2");
       gitCommit("✨ sparkles joy with new feat\n\n🚨 breaking");
-      jest.setMock("../src/config", { minorForBreakingInDevelopment: false });
+      jest.setMock("../src/config/config", {
+        minorForBreakingInDevelopment: false
+      });
       return getBump().then(recommendation => {
         expect(recommendation.releaseType).toEqual("major");
       });

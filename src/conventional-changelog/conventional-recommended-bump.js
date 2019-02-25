@@ -1,8 +1,8 @@
 "use strict";
-const versionUtils = require("./version-utils");
-const config = require("./config");
+const versionUtils = require("../utils/version-utils");
+const config = require("../config/config");
 const Q = require("q");
-const emoji = require("./emoji");
+const emoji = require("../emoji/emoji");
 const gitSemverTags = Q.denodeify(require("git-semver-tags"));
 
 const parserOpts = require("./parser-opts");
