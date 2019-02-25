@@ -11,7 +11,7 @@ describe("fix commit message", () => {
   });
 
   afterEach(() => {
-    shell.rm(".tmp_dummy_commit");
+    shell.rm("-f", ".tmp_dummy_commit");
   });
 
   it("should not change text by default", () => {
