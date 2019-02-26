@@ -4,7 +4,8 @@ module.exports = [
     type: "fix",
     inChangelog: true,
     heading: "🐛 Bug Fixes",
-    aliases: ["🐞"]
+    aliases: ["🐞"],
+    index: 40
   },
   {
     emoji: "📚",
@@ -12,33 +13,38 @@ module.exports = [
     inChangelog: true,
     heading: "📚 Documentation",
     aliases: ["📖"],
-    typeAliases: ["doc"]
+    typeAliases: ["doc"],
+    index: 50
   },
   {
     emoji: "🎨",
     type: "style",
     heading: "🎨 Style",
     aliases: ["💄"],
-    typeAliases: ["cleanup"]
+    typeAliases: ["cleanup"],
+    index: 90
   },
   {
     emoji: "♻️",
     type: "refactor",
-    heading: "🛠 Improvements"
+    heading: "🛠 Improvements",
+    index: 30
   },
   {
     emoji: "🛠",
     type: "improvement",
     inChangelog: true,
     heading: "🛠 Improvements",
-    typeAliases: ["imp"]
+    typeAliases: ["imp"],
+    index: 30
   },
   {
     emoji: "⚡️",
     type: "perf",
     inChangelog: true,
     heading: "⚡️ Performance",
-    typeAliases: ["performance"]
+    typeAliases: ["performance"],
+    index: 35
   },
   {
     emoji: "🏗",
@@ -46,7 +52,8 @@ module.exports = [
     inChangelog: true,
     heading: "🏗 Chore",
     aliases: ["⚙️"],
-    typeAliases: ["chores"]
+    typeAliases: ["chores"],
+    index: 60
   },
   {
     emoji: "✨",
@@ -54,38 +61,44 @@ module.exports = [
     bump: "minor",
     inChangelog: true,
     heading: "✨ Features",
-    aliases: ["🌟", "💫", "🌠"]
+    aliases: ["🌟", "💫", "🌠"],
+    index: 20
   },
   {
     emoji: "🚨",
     type: "breaking",
     bump: "major",
     inChangelog: true,
-    heading: "🚨 Breaking Changes"
+    heading: "🚨 Breaking Changes",
+    index: 10
   }, // Non rimuovee
   {
     emoji: "🚦",
     type: "test",
     heading: "🚦 Test",
-    aliases: ["✅"]
+    aliases: ["✅"],
+    index: 90
   },
   {
     emoji: "🔒",
     type: "security",
     inChangelog: true,
     heading: "🔒 Security",
-    alisases: ["🔑"]
+    alisases: ["🔑"],
+    index: 11
   },
   {
     emoji: "📦",
     type: "build",
     heading: "📦 Build",
     aliases: [],
-    typeAliases: ["deps"]
+    typeAliases: ["deps"],
+    index: 90
   },
   {
     emoji: "🔖",
-    type: "release"
+    type: "release",
+    index: 90
   },
-  { emoji: "🚧", type: "wip", bump: "patch", inChangelog: false }
+  { emoji: "🚧", type: "wip", bump: "patch", inChangelog: false, index: 90 }
 ];

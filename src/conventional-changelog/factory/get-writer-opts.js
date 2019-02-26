@@ -1,5 +1,6 @@
 const emoji = require("../../emoji/emoji");
 const config = require("../../config/config");
+const commitGroupsSort = require("./commit-groups-sort");
 
 /**
  * Factory to build conventional-changelog `writerOpts`.
@@ -67,7 +68,7 @@ module.exports = function getWriterOpts() {
       return commit;
     },
     groupBy: "type",
-    commitGroupsSort: "title",
+    commitGroupsSort,
     commitsSort: ["scope", "subject"],
     noteGroupsSort: "title"
   };
