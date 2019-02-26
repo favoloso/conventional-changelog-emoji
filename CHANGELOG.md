@@ -1,3 +1,16 @@
+# [0.6.0](https://github.com/favoloso/conventional-changelog-emoji/compare/v0.5.0...v0.6.0) (2019-02-26)
+
+
+### ✨ Features
+
+* Add custom emojis support ([80ab5a8](https://github.com/favoloso/conventional-changelog-emoji/commit/80ab5a8))
+
+
+### 🛠 Improvements
+
+* Refactor code structure ([62198b8](https://github.com/favoloso/conventional-changelog-emoji/commit/62198b8))
+
+
 # [0.5.0](https://github.com/favoloso/conventional-changelog-emoji/compare/v0.4.1...v0.5.0) (2019-02-25)
 
 
