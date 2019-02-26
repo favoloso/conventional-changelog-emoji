@@ -56,7 +56,7 @@ The package works as-is, but its behaviour may be customized with the following 
 
 > _Note:_ This package supports [`cosmiconfig`](https://github.com/davidtheclark/cosmiconfig#readme) to provide configuration options with `favolosoEmoji` module name.
 
-- **`emoji`** (default: `{}`)
+- **`emojis`** (default: `{}`)
 
   An object allowing you to customize conventional-changelog types used (as _Available Emojis_ table).
 
