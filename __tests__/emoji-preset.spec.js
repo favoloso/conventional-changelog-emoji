@@ -21,24 +21,29 @@ function prepareRepo() {
 
 function getChangelog() {
   return new Promise((resolve, reject) => {
-    const preset = require("..");
-    const conventionalChangelogCore = require("conventional-changelog-core");
-    let filename = path.resolve(__dirname, ".CHANGELOG.md");
-    let results = new fs.createWriteStream(filename);
-    conventionalChangelogCore({
-      config: preset,
-      warn: (...m) => console.log(...m)
-    })
-      .on("error", err => {
-        reject(err);
-      })
-      .pipe(results);
+    try {
+      const preset = require("..");
 
-    results.on("finish", () => {
-      let changelog = fs.readFileSync(filename);
-      fs.unlinkSync(filename);
-      resolve(changelog.toString());
-    });
+      const conventionalChangelogCore = require("conventional-changelog-core");
+      let filename = path.resolve(__dirname, ".CHANGELOG.md");
+      let results = new fs.createWriteStream(filename);
+      conventionalChangelogCore({
+        config: preset,
+        warn: (...m) => console.log(...m)
+      })
+        .on("error", err => {
+          reject(err);
+        })
+        .pipe(results);
+
+      results.on("finish", () => {
+        let changelog = fs.readFileSync(filename);
+        fs.unlinkSync(filename);
+        resolve(changelog.toString());
+      });
+    } catch (e) {
+      reject(e);
+    }
   });
 }
 
@@ -130,6 +135,13 @@ describe("emoji preset", () => {
     });
   });
 
+  it("should recognize breaking change emoji", () => {
+    gitCommit("🚨 Breaking commit");
+    return getChangelog().then(changelog => {
+      expect(changelog).toContainString("### 🚨 Breaking Changes");
+    });
+  });
+
   it("should ignore emoji after the first one and put them in the subject", () => {
     gitCommit("🌟🛠 Multiemoji parsing");
     return getChangelog().then(changelog => {
@@ -214,6 +226,70 @@ describe("emoji preset", () => {
       });
       return getBump().then(recommendation => {
         expect(recommendation.releaseType).toEqual("major");
+      });
+    });
+  });
+
+  describe("custom emoji configuration", () => {
+    it("should allow to override emoji configuration", () => {
+      jest.setMock("../src/config/config", {
+        emojis: {
+          fix: {
+            emoji: "🐞",
+            heading: "🐞 Fiiix!"
+          }
+        }
+      });
+      gitCommit("🐞 A bug fixed");
+      return getChangelog().then(changelog => {
+        expect(changelog).toContainString("🐞 Fiiix!");
+        expect(changelog).not.toContainString("🐛");
+      });
+    });
+
+    it("should allow to add other kinds of emoji commits", () => {
+      jest.setMock("../src/config/config", {
+        emojis: {
+          change: {
+            emoji: "💼",
+            inChangelog: true,
+            heading: "💼 Changes"
+          }
+        }
+      });
+      gitCommit("💼 Business change");
+      return getChangelog().then(changelog => {
+        expect(changelog).toContainString("* Business change");
+        expect(changelog).toContainString("### 💼 Changes");
+      });
+    });
+
+    it("should allow to remove existing groups", () => {
+      jest.setMock("../src/config/config", {
+        emojis: {
+          chore: false
+        }
+      });
+      gitCommit("🏗 a chore");
+      return getChangelog().then(changelog => {
+        expect(changelog).not.toContainString("* a chore");
+        expect(changelog).not.toContainString("### 🏗 Chores");
+      });
+    });
+
+    it("should provide helpful warning if trying to remove undefined emoji", () => {
+      jest.setMock("../src/config/config", {
+        emojis: {
+          choree: false
+        }
+      });
+      gitCommit("🏗 a chore");
+      return getChangelog().catch(e => {
+        expect(e).toMatchObject(
+          new Error(
+            'Cannot remove emoji group "choree" since it is not defined.'
+          )
+        );
       });
     });
   });

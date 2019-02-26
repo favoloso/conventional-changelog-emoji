@@ -56,6 +56,15 @@ The package works as-is, but its behaviour may be customized with the following 
 
 > _Note:_ This package supports [`cosmiconfig`](https://github.com/davidtheclark/cosmiconfig#readme) to provide configuration options with `favolosoEmoji` module name.
 
+- **`emoji`** (default: `{}`)
+
+  An object allowing you to customize conventional-changelog types used (as _Available Emojis_ table).
+
+  You should provide an object, where the key is the `type` you want to edit (or add), and the value is the
+  updated configuration. Configurations will be merged with originals if existing.
+
+  See the [wiki page](https://github.com/favoloso/conventional-changelog-emoji/wiki/Custom-Emojis) for further details.
+
 - **`fixAliasedEmoji`** (default: `false`)
 
   Replaces aliased emojis (like 🌠) with default one (like ✨)

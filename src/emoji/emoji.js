@@ -1,28 +1,11 @@
-function emoji(
-  emoji,
-  type,
-  bump,
-  inChangelog,
-  heading,
-  aliases = [],
-  typeAliases = []
-) {
-  return {
-    emoji,
-    type,
-    bump,
-    inChangelog,
-    heading,
-    aliases,
-    typeAliases
-  };
-}
+const emojiGroups = require("./emoji-groups");
+const emojiConfigLoader = require("./emoji-config-loader");
 
 /**
  * Finds all emojis (i.e. all features by `minor`, or all breakings by `major`)
  */
 function emojisByBump(bump) {
-  const types = list.filter(e => e.bump === bump);
+  const types = groups.filter(e => e.bump === bump);
   return types.reduce((emojis, type) => {
     emojis.push(type.emoji, ...type.aliases);
     return emojis;
@@ -33,7 +16,7 @@ function emojisByBump(bump) {
  * Finds original emoji starting from aliased `emoji` provided
  */
 function findAliased(emoji) {
-  const base = list.find(e => e.aliases.indexOf(emoji) !== -1);
+  const base = groups.find(e => e.aliases.indexOf(emoji) !== -1);
   if (base) return base.emoji;
   return emoji;
 }
@@ -42,10 +25,10 @@ function findAliased(emoji) {
  * Finds replacing emoji
  */
 function findEmoji(emoji) {
-  const original = list.find(e => e.emoji === emoji);
+  const original = groups.find(e => e.emoji === emoji);
   if (original) return original;
 
-  const aliased = list.find(e => e.aliases.indexOf(emoji) !== -1);
+  const aliased = groups.find(e => e.aliases.indexOf(emoji) !== -1);
   if (aliased) return aliased;
 
   return null;
@@ -55,28 +38,39 @@ function findEmoji(emoji) {
  * Finds emoji by type. Support type-aliases.
  */
 function findEmojiByType(type) {
-  return list.find(e => e.type === type || e.typeAliases.indexOf(type) !== -1);
+  return groups.find(
+    e => e.type === type || e.typeAliases.indexOf(type) !== -1
+  );
 }
 
-const list = [
-  emoji("🐛", "fix", "patch", true, "🐛 Bug Fixes", ["🐞"]),
-  emoji("📚", "docs", "patch", true, "📚 Documentation", ["📖"], ["doc"]),
-  emoji("🎨", "style", "patch", false, "🎨 Style", ["💄"], ["cleanup"]),
-  emoji("♻️", "refactor", "patch", true, "🛠 Improvements"),
-  emoji("🛠", "improvement", "patch", true, "🛠 Improvements", [], ["imp"]),
-  emoji("⚡️", "perf", "patch", true, "⚡️ Performance", [], ["performance"]),
-  emoji("🏗", "chore", "patch", true, "🏗 Chore", ["⚙️"], ["chores"]),
-  emoji("✨", "feat", "minor", true, "✨ Features", ["🌟", "💫", "🌠"]),
-  emoji("🚨", "breaking", "major", true, "🚨 Breaking Changes"), // Non rimuovere
-  emoji("🚦", "test", "patch", false, "🚦 Test", ["✅"]),
-  emoji("🔒", "security", "patch", true, "🔒 Security", ["🔑"]),
-  emoji("📦", "build", "patch", false, "📦 Build", [], ["deps"]),
-  emoji("🔖", "release", "patch", false, ""),
-  emoji("🚧", "wip", "patch", false, "")
-];
+/**
+ * Adds missing fields to emojis.
+ */
+function normalizeEmojiGroup(group) {
+  if (!group.emoji || !group.type) {
+    throw new Error(
+      `Cannot process emoji:\n
+      "${JSON.stringify(group)}".\n
+      Make sure you are including at least an "emoji" and a "type" property.`
+    );
+  }
+
+  return {
+    ...group,
+    heading:
+      group.heading ||
+      `${group.emoji} ${group.type[0].toUpperCase() + group.type.substr(1)}`,
+    bump: group.bump || "patch",
+    aliases: group.aliases || [],
+    typeAliases: group.typeAliases || [],
+    inChangelog: group.inChangelog == null ? false : group.inChangelog
+  };
+}
+
+const groups = emojiConfigLoader(emojiGroups).map(normalizeEmojiGroup);
 
 module.exports = {
-  list,
+  list: groups,
   featureEmojis: emojisByBump("minor"),
   breakingEmojis: emojisByBump("major"),
   findAliased,
