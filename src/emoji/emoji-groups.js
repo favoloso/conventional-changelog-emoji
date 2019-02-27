@@ -27,8 +27,8 @@ module.exports = [
   {
     emoji: "♻️",
     type: "refactor",
-    heading: "🛠 Improvements",
-    index: 30
+    heading: "♻️ Refactoring",
+    index: 90
   },
   {
     emoji: "🛠",
@@ -85,7 +85,7 @@ module.exports = [
     inChangelog: true,
     heading: "🔒 Security",
     alisases: ["🔑"],
-    index: 11
+    index: 25
   },
   {
     emoji: "📦",
@@ -101,4 +101,4 @@ module.exports = [
     index: 90
   },
   { emoji: "🚧", type: "wip", bump: "patch", inChangelog: false, index: 90 }
-];
+].sort((g, o) => g.index - o.index);

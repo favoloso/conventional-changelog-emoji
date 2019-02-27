@@ -67,10 +67,12 @@ function normalizeEmojiGroup(group) {
   };
 }
 
-const groups = emojiConfigLoader(emojiGroups).map(normalizeEmojiGroup);
+const baseGroups = emojiGroups.map(normalizeEmojiGroup);
+const groups = emojiConfigLoader(baseGroups).map(normalizeEmojiGroup);
 
 module.exports = {
   list: groups,
+  baseList: baseGroups,
   featureEmojis: emojisByBump("minor"),
   breakingEmojis: emojisByBump("major"),
   findAliased,
