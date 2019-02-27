@@ -92,18 +92,25 @@ The package works as-is, but its behaviour may be customized with the following 
 
 ## Available Emojis
 
-| Emoji | Type        | Version Bump | In Changelog? | Header              | Aliases  |
-| ----- | ----------- | ------------ | ------------- | ------------------- | -------- |
-| 🐛    | fix         | patch        | true          | 🐛 Bug Fixes        | 🐞       |
-| 📚    | docs        | patch        | true          | 📚 Documentation    | 📖       |
-| 🎨    | style       | patch        | false         | 🎨 Style            | 💄       |
-| ♻️    | refactor    | patch        | true          | 🛠 Improvements      |
-| 🏗     | chore       | patch        | true          | 🏗 Chore             |
-| ✨    | feat        | minor        | true          | ✨ Features         | 🌟,🌠,💫 |
-| 🚨    | breaking    | major        | true          | 🚨 Breaking Changes |
-| 🛠     | improvement | patch        | true          | 🛠 Improvements      |
-| 🚦    | test        | patch        | false         | 🚦 Test             | ✅       |
-| 🔒    | security    | patch        | true          | 🔒 Security         | 🔑       |
-| 📦    | build       | patch        | true          | 📦 Build            |
-| 🔖    | release     | patch        | false         |                     |
-| 🚧    | wip         | patch        | false         |                     |
+<!-- prettier-ignore-start -->
+<!-- emoji-table -->
+
+ Emoji | Aliases | Type | Type Aliases | Version Bump | In Changelog? | Heading  | Order
+ ----- | ------- | ---- | ------------ | ------------ | ------------- | -------  | -----
+🚨 |  | `breaking` |  | major | ✅ | 🚨 Breaking Changes | 10
+✨ | 🌟, 💫, 🌠 | `feat` |  | minor | ✅ | ✨ Features | 20
+🔒 |  | `security` |  | patch | ✅ | 🔒 Security | 25
+🛠 |  | `improvement` | `imp` | patch | ✅ | 🛠 Improvements | 30
+⚡️ |  | `perf` | `performance` | patch | ✅ | ⚡️ Performance | 35
+🐛 | 🐞 | `fix` |  | patch | ✅ | 🐛 Bug Fixes | 40
+📚 | 📖 | `docs` | `doc` | patch | ✅ | 📚 Documentation | 50
+🏗 | ⚙️ | `chore` | `chores` | patch | ✅ | 🏗 Chore | 60
+♻️ |  | `refactor` |  | patch |  | ♻️ Refactoring | 90
+🚦 | ✅ | `test` |  | patch |  | 🚦 Test | 90
+🎨 | 💄 | `style` | `cleanup` | patch |  | 🎨 Style | 90
+📦 |  | `build` | `deps` | patch |  | 📦 Build | 90
+🔖 |  | `release` |  | patch |  | 🔖 Release | 90
+🚧 |  | `wip` |  | patch |  | 🚧 Wip | 90
+
+<!-- emoji-table -->
+<!-- prettier-ignore-end -->

@@ -230,6 +230,44 @@ describe("emoji preset", () => {
     });
   });
 
+  describe("changelog groups order", () => {
+    it("should place groups in correct order", () => {
+      gitCommit("🐛 fix 1");
+      gitCommit("✨ feat");
+      gitCommit("🚨 breaking");
+      gitCommit("📚 docs");
+      gitCommit("🛠 improvement");
+      return getChangelog().then(changelog => {
+        expect(changelog.indexOf("🚨")).toBeLessThan(changelog.indexOf("✨"));
+        expect(changelog.indexOf("✨")).toBeLessThan(changelog.indexOf("🛠"));
+        expect(changelog.indexOf("🛠")).toBeLessThan(changelog.indexOf("🐛"));
+        expect(changelog.indexOf("🐛")).toBeLessThan(changelog.indexOf("📚"));
+      });
+    });
+
+    it("should apply lexical sort to heading when index is the same", () => {
+      gitCommit("🚦 test");
+      gitCommit("✨ feat");
+      gitCommit("📦 build");
+      gitCommit("🛠 improvement");
+      jest.setMock("../src/config/config", {
+        emojis: {
+          build: {
+            inChangelog: true
+          },
+          test: {
+            inChangelog: true
+          }
+        }
+      });
+      return getChangelog().then(changelog => {
+        console.log(changelog);
+        expect(changelog.indexOf("📦")).toBeLessThan(changelog.indexOf("🚦"));
+        expect(changelog.indexOf("✨")).toBeLessThan(changelog.indexOf("📦"));
+      });
+    });
+  });
+
   describe("custom emoji configuration", () => {
     it("should allow to override emoji configuration", () => {
       jest.setMock("../src/config/config", {
