@@ -26,6 +26,12 @@ describe("fix commit message", () => {
     expect(fixCommitMessage("🌟 Add feat")).toEqual("✨ Add feat");
   });
 
+  it("should ignore fix if not emoji-style", () => {
+    jest.setMock("../src/config/config", { fixAliasedEmoji: true });
+    const fixCommitMessage = require("../src/lint/fix-commit-message");
+    expect(fixCommitMessage("fixa: Add feat")).toBeNull();
+  });
+
   it("should transform conventional commits into emoji", () => {
     jest.setMock("../src/config/config", { fixAliasedEmoji: true });
     const fixCommitMessage = require("../src/lint/fix-commit-message");
@@ -36,6 +42,12 @@ describe("fix commit message", () => {
     jest.setMock("../src/config/config", {});
     const fixCommitMessage = require("../src/lint/fix-commit-message");
     expect(fixCommitMessage("doc: Add doc")).toEqual("📚 Add doc");
+  });
+
+  it("should ignore unrecognized type aliases", () => {
+    jest.setMock("../src/config/config", {});
+    const fixCommitMessage = require("../src/lint/fix-commit-message");
+    expect(fixCommitMessage("docxx: Add doc")).toBeNull();
   });
 
   describe("cli", () => {

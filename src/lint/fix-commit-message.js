@@ -1,12 +1,8 @@
-const emoji = require("../emoji/emoji");
-const emojiRegex = require("emoji-regex/text")();
 const config = require("../config/config");
+const aliasedEmojiFixer = require("./fixers/aliased-emoji-fixer");
+const conventionalTypeFixer = require("./fixers/conventional-type-fixer");
 
-const fixableRegex = new RegExp(`^([a-zA-Z]+)\\:\\s*(.*)$`, "im");
-const emojiAliasedRegex = new RegExp(
-  `^(${emojiRegex.source})?(\\s*)(.*)$`,
-  "m"
-);
+const fixers = [conventionalTypeFixer, aliasedEmojiFixer];
 
 /**
  * Fix a commit message following project configuration.
@@ -14,28 +10,13 @@ const emojiAliasedRegex = new RegExp(
 module.exports = function fixCommitMessage(rawMessage) {
   let message = rawMessage;
 
-  if (message) {
-    // Replaces conventional commits
-    const matches = message.match(fixableRegex);
+  if (!message) return rawMessage;
 
-    if (matches) {
-      const type = matches[1].toLowerCase();
-      const replace = emoji.findEmojiByType(type);
-      if (!type) return;
-
-      message = replace.emoji + message.substr(type.length + 1);
-    }
-
-    // Replaces aliased emojis
-    const emojiMatches = message.match(emojiAliasedRegex);
-    if (config.fixAliasedEmoji && emojiMatches != null) {
-      const commitEmoji = emojiMatches[1];
-      const replace = emoji.findAliased(commitEmoji);
-      if (replace !== commitEmoji) {
-        message = replace + message.substr(commitEmoji.length);
-      }
-    }
-  }
+  // Apply Fixers
+  message = fixers.reduce(
+    (fixed, fixer) => fixer(config, fixed) || fixed,
+    message
+  );
 
   return message === rawMessage ? null : message;
 };
