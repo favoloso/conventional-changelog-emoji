@@ -1,5 +1,6 @@
 const emojiGroups = require("./emoji-groups");
 const emojiConfigLoader = require("./emoji-config-loader");
+const emojiRegex = require("emoji-regex/text")();
 
 /**
  * Finds all emojis (i.e. all features by `minor`, or all breakings by `major`)
@@ -70,9 +71,12 @@ function normalizeEmojiGroup(group) {
 const baseGroups = emojiGroups.map(normalizeEmojiGroup);
 const groups = emojiConfigLoader(baseGroups).map(normalizeEmojiGroup);
 
+const commitRegex = new RegExp(`^(${emojiRegex.source})(\\s*)(.*)$`, "m");
+
 module.exports = {
   list: groups,
   baseList: baseGroups,
+  commitRegex,
   featureEmojis: emojisByBump("minor"),
   breakingEmojis: emojisByBump("major"),
   findAliased,
