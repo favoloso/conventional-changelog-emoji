@@ -1,6 +1,11 @@
 const emojis = require("../../emoji/emoji");
 const linter = require("./shared/linter");
 
+/**
+ * Allows only known emojis from `emojis` configuration.
+ * When aliases are available, we replace them with base emoji
+ * instead of throwing.
+ */
 module.exports = {
   name: "emoji-known",
   rule: function(ctx, options, tokens) {

@@ -1,3 +1,6 @@
+/**
+ * Checks for spaces between emoji and commit subject, and ensure it's only one.
+ */
 module.exports = {
   name: "spaces-between",
   rule: function(ctx, options, tokens) {

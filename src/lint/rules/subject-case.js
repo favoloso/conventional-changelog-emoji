@@ -1,5 +1,8 @@
 const toCase = require("./shared/to-case");
 
+/**
+ * Check and eventually replace commit message words case, as configured.
+ */
 module.exports = {
   name: "subject-case",
   args: ["case"],

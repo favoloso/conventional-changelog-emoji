@@ -63,11 +63,12 @@ The package works as-is, but its behaviour may be customized with the following 
   You should provide an object, where the key is the `type` you want to edit (or add), and the value is the
   updated configuration. Configurations will be merged with originals if existing.
 
-  See the [wiki page](https://github.com/favoloso/conventional-changelog-emoji/wiki/Custom-Emojis) for further details.
+  See the [**Custom Emoji** wiki page](https://github.com/favoloso/conventional-changelog-emoji/wiki/Custom-Emojis) for further details.
 
-- **`fixAliasedEmoji`** (default: `false`)
+- **`rules`** (default: `{}`)
 
-  Replaces aliased emojis (like 🌠) with default one (like ✨)
+  Allows to customize linter rules.
+  See the [**Linter Rules** wiki page](https://github.com/favoloso/conventional-changelog-emoji/wiki/Linter-Rules) for further details.
 
 - **`showEmojiPerCommit`** (default: `false`)
 
