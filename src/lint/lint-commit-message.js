@@ -87,7 +87,7 @@ function lintCommitMessage(commit) {
 function lintCommitMessageOrThrow(commit) {
   const linted = lintCommitMessage(commit);
 
-  const formatted = formatLintIssues(linted);
+  const formatted = formatLintIssues(linted) + "\n";
   if (linted.errors.length > 0) {
     throw new Error(formatted);
   }

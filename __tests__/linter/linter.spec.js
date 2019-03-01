@@ -65,7 +65,7 @@ describe("linter", () => {
     const lintCommitMessageOrThrow = require("../../src/lint/lint-commit-message")
       .lintCommitMessageOrThrow;
     setLintRules({ "emoji-require": true });
-    expect(() => lintCommitMessageOrThrow("doca: Aaa")).toThrow();
+    expect(() => lintCommitMessageOrThrow("doca: Aaaa")).toThrow();
   });
 
   describe("config", () => {
@@ -186,6 +186,7 @@ describe("linter", () => {
       );
       expect(lint("🛠 hello!\nmy commit")).toHaveError("body-leading-blank");
       expect(lint("🛠 hello!")).not.toHaveError("body-leading-blank");
+      expect(lint("🛠 hello!\n")).not.toHaveError("body-leading-blank");
     });
 
     it("should ignore leading blank line if disabled", () => {
@@ -215,17 +216,21 @@ describe("linter", () => {
     it("should print errors", () => {
       setLintRules();
       const linted = lint("🌟 My magical commit\nleading?");
-      expect(formatLintIssues(linted)).toMatchInlineSnapshot(
-        `"🔴 [body-leading-blank] Body should begin with a leading blank line."`
-      );
+      expect(formatLintIssues(linted)).toMatchInlineSnapshot(`
+"Commit do not lints based on your \\"emoji-commit-lint\\" rules:
+
+• 🔴 [body-leading-blank] Body should begin with a leading blank line."
+`);
     });
 
     it("should print warnings", () => {
       setLintRules({ "body-leading-blank": [1] });
       const linted = lint("🌟 My magical commit\nleading?");
-      expect(formatLintIssues(linted)).toMatchInlineSnapshot(
-        `"⚠️ [body-leading-blank] Body should begin with a leading blank line."`
-      );
+      expect(formatLintIssues(linted)).toMatchInlineSnapshot(`
+"Commit do not lints based on your \\"emoji-commit-lint\\" rules:
+
+• ⚠️ [body-leading-blank] Body should begin with a leading blank line."
+`);
     });
 
     it("should provide a clean success message", () => {

@@ -16,7 +16,7 @@ module.exports = function lintCommitCommand() {
 
     process.exit(0);
   } catch (err) {
-    process.stderr.write(err);
+    process.stderr.write(typeof err === "object" ? err.message : err);
     process.exit(1);
   }
 };
