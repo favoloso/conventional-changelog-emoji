@@ -6,7 +6,7 @@ module.exports = {
   rules: {
     "emoji-from-type": true,
     "emoji-known": true,
-    "emoji-require": false,
+    "emoji-require": true,
     "spaces-between": true,
     "header-full-stop": false,
     "header-max-length": false,
