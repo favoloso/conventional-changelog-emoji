@@ -1,32 +1,37 @@
 const Severity = {
+  fix: 3,
   error: 2,
   ignore: 0
 };
 
-function createResult(options, failed, message) {
-  return (failed && options.applicable === "always") ||
-    (!failed && options.applicable === "never")
-    ? {
-        severity: options.severity,
-        message
-      }
-    : null;
-}
-
 function resolveRuleOptions(config, rule) {
-  if (!config || !config.rules || !config.rules[rule]) {
-    throw new Error("missing configuration for rule " + rule);
+  if (!config || !config.rules || config.rules[rule.name] == null) {
+    throw new Error("missing configuration for rule " + rule.name);
   }
-  const [severity, applicable, ...args] = config.rules[rule];
+  const options = config.rules[rule.name];
+
+  const [severity, args] =
+    options === true
+      ? [Severity.error]
+      : options === false
+      ? [Severity.ignore]
+      : options;
+
   return {
     severity,
-    applicable,
-    args
+    args: args || []
+  };
+}
+
+function error(message) {
+  return {
+    severity: Severity.error,
+    message: message
   };
 }
 
 module.exports = {
   Severity,
-  createResult,
-  resolveRuleOptions
+  resolveRuleOptions,
+  error
 };

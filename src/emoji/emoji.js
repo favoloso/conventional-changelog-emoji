@@ -19,7 +19,7 @@ function emojisByBump(bump) {
 function findAliased(emoji) {
   const base = groups.find(e => e.aliases.indexOf(emoji) !== -1);
   if (base) return base.emoji;
-  return emoji;
+  return null;
 }
 
 /**
@@ -71,7 +71,10 @@ function normalizeEmojiGroup(group) {
 const baseGroups = emojiGroups.map(normalizeEmojiGroup);
 const groups = emojiConfigLoader(baseGroups).map(normalizeEmojiGroup);
 
-const commitRegex = new RegExp(`^(${emojiRegex.source})(\\s*)(.*)$`, "m");
+const commitRegex = new RegExp(
+  `^(${emojiRegex.source})(\\s*)([\\s\\S]*)$`,
+  "g"
+);
 
 module.exports = {
   list: groups,

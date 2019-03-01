@@ -1,0 +1,14 @@
+const toCase = require("./shared/to-case");
+
+module.exports = {
+  name: "subject-case",
+  args: ["case"],
+  rule: function(ctx, options, tokens) {
+    if (!tokens.subject) return;
+
+    const subject = toCase(options.args.case, tokens.subject);
+    if (subject === tokens.subject) return null;
+
+    return tokens.commit.replace(tokens.subject, subject);
+  }
+};

@@ -4,6 +4,9 @@ module.exports = {
   minorForBreakingInDevelopment: true,
   emojis: {},
   rules: {
-    "only-known": [2, "always"]
+    "emoji-from-type": true,
+    "emoji-known": true,
+    "spaces-between": true,
+    "subject-case": [2, { case: "sentence-case" }]
   }
 };

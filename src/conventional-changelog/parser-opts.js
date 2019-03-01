@@ -3,11 +3,11 @@
 const emojiRegex = require("emoji-regex/text")();
 const emoji = require("../emoji/emoji");
 
-const pattern = new RegExp(`^(${emojiRegex.source})?(\\s*)(.*)$`);
+const pattern = new RegExp(`^(${emojiRegex.source})(\\s*)(.*)$`);
 
 module.exports = {
   headerPattern: pattern,
-  headerCorrespondence: ["emoji", "_", "subject"],
+  headerCorrespondence: ["emoji", "spaces", "subject"],
   noteKeywords: [
     "BREAKING CHANGE",
     "BREAKING CHANGES",
