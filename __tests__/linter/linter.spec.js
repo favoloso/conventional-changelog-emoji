@@ -2,6 +2,7 @@ const shell = require("shelljs");
 const fs = require("fs");
 const path = require("path");
 const process = require("process");
+const formatLintIssues = require("../../src/lint/format/format-lint-issues");
 
 function setLintRules(rules) {
   const config = require("../../src/config/config-default");
@@ -12,7 +13,8 @@ function setLintRules(rules) {
 }
 
 function lint(message) {
-  const lintCommitMessage = require("../../src/lint/lint-commit-message");
+  const lintCommitMessage = require("../../src/lint/lint-commit-message")
+    .lintCommitMessage;
   return lintCommitMessage(message);
 }
 
@@ -57,6 +59,13 @@ describe("linter", () => {
   it("should requires a message", () => {
     setLintRules();
     expect(() => lint()).toThrow();
+  });
+
+  it("should throw if rules are violated", () => {
+    const lintCommitMessageOrThrow = require("../../src/lint/lint-commit-message")
+      .lintCommitMessageOrThrow;
+    setLintRules({ "emoji-require": true });
+    expect(() => lintCommitMessageOrThrow("doca: Aaa")).toThrow();
   });
 
   describe("config", () => {
@@ -202,10 +211,36 @@ describe("linter", () => {
     });
   });
 
+  describe("format", () => {
+    it("should print errors", () => {
+      setLintRules();
+      const linted = lint("🌟 My magical commit\nleading?");
+      expect(formatLintIssues(linted)).toMatchInlineSnapshot(
+        `"🔴 [body-leading-blank] Body should begin with a leading blank line."`
+      );
+    });
+
+    it("should print warnings", () => {
+      setLintRules({ "body-leading-blank": [1] });
+      const linted = lint("🌟 My magical commit\nleading?");
+      expect(formatLintIssues(linted)).toMatchInlineSnapshot(
+        `"⚠️ [body-leading-blank] Body should begin with a leading blank line."`
+      );
+    });
+
+    it("should provide a clean success message", () => {
+      setLintRules();
+      const linted = lint("🐛 A fix");
+      expect(formatLintIssues(linted)).toMatchInlineSnapshot(
+        `"✅ No issues found in commit style"`
+      );
+    });
+  });
+
   describe("cli", () => {
     it("should read HUSKY_GIT_PARAMS", () => {
       setLintRules();
-      jest.spyOn(process, "exit").mockImplementation(() => {});
+      jest.spyOn(process, "exit").mockImplementationOnce(() => {});
       process.env.HUSKY_GIT_PARAMS = ".tmp_dummy_commit";
       fs.writeFileSync(".tmp_dummy_commit", "fix: Fix bug");
       require("../../src/lint/lint-commit-command")();
@@ -217,7 +252,7 @@ describe("linter", () => {
     it("should not write file if not changed", () => {
       setLintRules();
       fs.writeFileSync(".tmp_dummy_commit", "🐛 Fix bug");
-      jest.spyOn(process, "exit").mockName("exit");
+      jest.spyOn(process, "exit").mockImplementationOnce(() => {});
       process.env.HUSKY_GIT_PARAMS = ".tmp_dummy_commit";
       require("../../src/lint/lint-commit-command")();
       expect(process.exit).toHaveBeenCalledWith(0);
@@ -225,6 +260,7 @@ describe("linter", () => {
     });
 
     it("should write error to stderr if thrown", () => {
+      jest.spyOn(process, "exit").mockImplementationOnce(() => {});
       jest.spyOn(fs, "readFileSync").mockImplementationOnce(() => {
         throw new Error("errfs");
       });

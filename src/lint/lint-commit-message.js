@@ -1,6 +1,7 @@
 const config = require("../config/config");
 const parseCommit = require("./parse/parse-commit");
 const linter = require("./rules/shared/linter");
+const formatLintIssues = require("./format/format-lint-issues");
 
 const rules = [
   require("./rules/emoji-from-type"),
@@ -18,7 +19,8 @@ const rules = [
  * Lint a commit message following project configuration.
  * Returns list of errors.
  */
-module.exports = function lintCommitMessage(commit) {
+
+function lintCommitMessage(commit) {
   if (!commit) {
     throw new Error('You should pass a message to "lintCommitMessage".');
   }
@@ -59,7 +61,7 @@ module.exports = function lintCommitMessage(commit) {
       }
 
       // An error occurred.
-      result.lints.push({
+      result.errors.push({
         ...partial,
         severity: options.severity,
         rule: rule.name
@@ -68,22 +70,33 @@ module.exports = function lintCommitMessage(commit) {
     },
     {
       commit,
-      lints: []
+      errors: []
     }
   );
 
-  const errors = linted.lints.filter(e => e.severity === linter.Severity.error);
   return {
-    errors,
+    errors: linted.errors,
     commit: linted.commit,
     changed: linted.commit !== commit
   };
+}
 
-  // if (errors.length > 0) {
-  //   throw new Error(
-  //     `Commit does not match required rules:\n\n${errors
-  //       .map(e => `- ${e.message}`)
-  //       .join("\n")}`
-  //   );
-  // }
+/**
+ * Lints the commit and throws if errors are found.
+ */
+function lintCommitMessageOrThrow(commit) {
+  const linted = lintCommitMessage(commit);
+
+  const formatted = formatLintIssues(linted);
+  if (linted.errors.length > 0) {
+    throw new Error(formatted);
+  }
+
+  process.stdout.write(formatted);
+  return linted;
+}
+
+module.exports = {
+  lintCommitMessage,
+  lintCommitMessageOrThrow
 };
