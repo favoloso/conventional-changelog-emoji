@@ -24,12 +24,14 @@ npm install --save-dev @favoloso/conventional-changelog-emoji
 conventional-changelog -p @favoloso/emoji -i CHANGELOG.md -s
 ```
 
-## Automatically fix commit messages
+## Lint (and fix) commit messages
 
-This package provides an additional bin script `favoloso-emoji-fix-commit`.
+This package provides an additional bin script `emoji-lint-commit`.
 
-The scripts **changes commit messages**, from traditional conventional changelog
-format (i.e. `feat: Add a magic feature`), to corresponding emoji (i.e. `✨ Add a magic feature`).
+The scripts **lints and eventually changes commit messages**, from traditional conventional changelog
+format (i.e. `feat: Add a magic feature`) to corresponding emoji (i.e. `✨ Add a magic feature`),
+checks and applies correct casing (i.e. `lower-case`) and many more, as configured
+by [**Linter Rules**](https://github.com/favoloso/conventional-changelog-emoji/wiki/Linter-Rules).
 
 To use it, install [husky](https://github.com/typicode/husky)
 
@@ -42,13 +44,13 @@ Now in your package.json add:
 ```json
 {
   "husky": {
-    "commit-msg": "favoloso-emoji-fix-commit"
+    "commit-msg": "emoji-lint-commit"
   }
 }
 ```
 
-Now any commit like `<type>: <msg>` will be automatically transformed with related
-emoji. See _Available Emojis_ to see available **types**.
+Now linter will check your commits. Any commit like `<type>: <msg>` will be automatically
+transformed with related emoji. See _Available Emojis_ to see available **types**.
 
 ## Configuration
 
@@ -63,11 +65,12 @@ The package works as-is, but its behaviour may be customized with the following 
   You should provide an object, where the key is the `type` you want to edit (or add), and the value is the
   updated configuration. Configurations will be merged with originals if existing.
 
-  See the [wiki page](https://github.com/favoloso/conventional-changelog-emoji/wiki/Custom-Emojis) for further details.
+  See the [**Custom Emoji** wiki page](https://github.com/favoloso/conventional-changelog-emoji/wiki/Custom-Emojis) for further details.
 
-- **`fixAliasedEmoji`** (default: `false`)
+- **`rules`** (default: `{}`)
 
-  Replaces aliased emojis (like 🌠) with default one (like ✨)
+  Allows to customize linter rules.
+  See the [**Linter Rules** wiki page](https://github.com/favoloso/conventional-changelog-emoji/wiki/Linter-Rules) for further details.
 
 - **`showEmojiPerCommit`** (default: `false`)
 

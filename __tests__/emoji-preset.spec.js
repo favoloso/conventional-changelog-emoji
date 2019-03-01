@@ -261,7 +261,7 @@ describe("emoji preset", () => {
         }
       });
       return getChangelog().then(changelog => {
-        console.log(changelog);
+        // console.log(changelog);
         expect(changelog.indexOf("📦")).toBeLessThan(changelog.indexOf("🚦"));
         expect(changelog.indexOf("✨")).toBeLessThan(changelog.indexOf("📦"));
       });
@@ -299,6 +299,27 @@ describe("emoji preset", () => {
       return getChangelog().then(changelog => {
         expect(changelog).toContainString("* Business change");
         expect(changelog).toContainString("### 💼 Changes");
+      });
+    });
+
+    it("should throw if emoji group misses type or emoji", () => {
+      jest.setMock("../src/config/config", {
+        emojis: {
+          change: {
+            inChangelog: true,
+            heading: "💼 Changes"
+          }
+        }
+      });
+      gitCommit("💼 Business change");
+      return getChangelog().catch(e => {
+        expect(e).toMatchInlineSnapshot(`
+[Error: Cannot process emoji:
+
+      "{"type":"change","inChangelog":true,"heading":"💼 Changes"}".
+
+      Make sure you are including at least an "emoji" and a "type" property.]
+`);
       });
     });
 

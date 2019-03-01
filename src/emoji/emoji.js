@@ -1,5 +1,6 @@
 const emojiGroups = require("./emoji-groups");
 const emojiConfigLoader = require("./emoji-config-loader");
+const emojiRegex = require("emoji-regex/text")();
 
 /**
  * Finds all emojis (i.e. all features by `minor`, or all breakings by `major`)
@@ -18,7 +19,7 @@ function emojisByBump(bump) {
 function findAliased(emoji) {
   const base = groups.find(e => e.aliases.indexOf(emoji) !== -1);
   if (base) return base.emoji;
-  return emoji;
+  return null;
 }
 
 /**
@@ -41,6 +42,17 @@ function findEmojiByType(type) {
   return groups.find(
     e => e.type === type || e.typeAliases.indexOf(type) !== -1
   );
+}
+
+/**
+ * Finds type by emoji.
+ */
+function findType(emoji) {
+  const group = groups.find(
+    e => e.emoji === emoji || e.aliases.indexOf(emoji) !== -1
+  );
+  if (group) return group.type;
+  return null;
 }
 
 /**
@@ -70,12 +82,20 @@ function normalizeEmojiGroup(group) {
 const baseGroups = emojiGroups.map(normalizeEmojiGroup);
 const groups = emojiConfigLoader(baseGroups).map(normalizeEmojiGroup);
 
+const commitRegex = new RegExp(
+  `^(${emojiRegex.source})(\\s*)([\\s\\S]*)$`,
+  "g"
+);
+
 module.exports = {
   list: groups,
   baseList: baseGroups,
+  commitRegex,
   featureEmojis: emojisByBump("minor"),
   breakingEmojis: emojisByBump("major"),
+  releaseEmoji: groups.find(g => g.type === "release"),
   findAliased,
+  findType,
   findEmoji,
   findEmojiByType
 };
