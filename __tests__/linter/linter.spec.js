@@ -122,7 +122,7 @@ describe("linter", () => {
       jest.spyOn(process, "exit").mockImplementation(() => {});
       process.env.HUSKY_GIT_PARAMS = ".tmp_dummy_commit";
       fs.writeFileSync(".tmp_dummy_commit", "fix: Fix bug");
-      require("../../src/lint/fix-commit-command")();
+      require("../../src/lint/lint-commit-command")();
       expect(process.exit).toHaveBeenCalledWith(0);
       expect(fs.readFileSync(".tmp_dummy_commit", "utf8")).toEqual("🐛 Fix bug"); // prettier-ignore
       delete process.env.HUSKY_GIT_PARAMS;
@@ -133,7 +133,7 @@ describe("linter", () => {
       fs.writeFileSync(".tmp_dummy_commit", "🐛 Fix bug");
       jest.spyOn(process, "exit").mockName("exit");
       process.env.HUSKY_GIT_PARAMS = ".tmp_dummy_commit";
-      require("../../src/lint/fix-commit-command")();
+      require("../../src/lint/lint-commit-command")();
       expect(process.exit).toHaveBeenCalledWith(0);
       delete process.env.HUSKY_GIT_PARAMS;
     });
@@ -142,7 +142,7 @@ describe("linter", () => {
       jest.spyOn(fs, "readFileSync").mockImplementationOnce(() => {
         throw new Error("errfs");
       });
-      require("../../src/lint/fix-commit-command")();
+      require("../../src/lint/lint-commit-command")();
       expect(process.exit).toHaveBeenCalledWith(1);
     });
   });

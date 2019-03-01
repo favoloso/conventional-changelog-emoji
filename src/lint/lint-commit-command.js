@@ -1,11 +1,8 @@
 const fs = require("fs");
 const lintCommitMessage = require("./lint-commit-message");
 
-module.exports = function fixCommitCommand() {
+module.exports = function lintCommitCommand() {
   try {
-    // const message = fixCommitMessage(
-    //   fs.readFileSync(process.env.HUSKY_GIT_PARAMS, "utf8")
-    // );
     const linted = lintCommitMessage(
       fs.readFileSync(process.env.HUSKY_GIT_PARAMS, "utf8")
     );
