@@ -113,7 +113,11 @@ describe("linter", () => {
     });
 
     it("should ignore unrecognized type aliases if disabled", () => {
-      setLintRules({ "emoji-from-type": false, "subject-require": false });
+      setLintRules({
+        "emoji-from-type": false,
+        "emoji-require": false,
+        "subject-require": false
+      });
       expect(lint("docxx: Add doc").errors).toHaveLength(0);
     });
   });
@@ -185,6 +189,7 @@ describe("linter", () => {
         "body-leading-blank"
       );
       expect(lint("🛠 hello!\nmy commit")).toHaveError("body-leading-blank");
+
       expect(lint("🛠 hello!")).not.toHaveError("body-leading-blank");
       expect(lint("🛠 hello!\n")).not.toHaveError("body-leading-blank");
     });
