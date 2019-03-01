@@ -45,6 +45,17 @@ function findEmojiByType(type) {
 }
 
 /**
+ * Finds type by emoji.
+ */
+function findType(emoji) {
+  const group = groups.find(
+    e => e.emoji === emoji || e.aliases.indexOf(emoji) !== -1
+  );
+  if (group) return group.type;
+  return null;
+}
+
+/**
  * Adds missing fields to emojis.
  */
 function normalizeEmojiGroup(group) {
@@ -82,7 +93,9 @@ module.exports = {
   commitRegex,
   featureEmojis: emojisByBump("minor"),
   breakingEmojis: emojisByBump("major"),
+  releaseEmoji: groups.find(g => g.type === "release"),
   findAliased,
+  findType,
   findEmoji,
   findEmojiByType
 };

@@ -104,8 +104,17 @@ describe("linter", () => {
     });
 
     it("should ignore unrecognized type aliases if disabled", () => {
-      setLintRules({ "emoji-from-type": false });
+      setLintRules({ "emoji-from-type": false, "subject-require": false });
       expect(lint("docxx: Add doc").errors).toHaveLength(0);
+    });
+  });
+
+  describe("emoji-require", () => {
+    it("should require an emoji to be set", () => {
+      setLintRules({ "emoji-require": true });
+      expect(lint("lol Emoji!")).toHaveError("emoji-require");
+      expect(lint("🛠 Emoji!")).not.toHaveError("emoji-require");
+      expect(lint("fix: Emoji!")).not.toHaveError("emoji-require");
     });
   });
 
@@ -113,6 +122,83 @@ describe("linter", () => {
     it("should remove multiples spaces between emoji and commit", () => {
       setLintRules();
       expect(lint("🛠   Add doc")).toHaveCommit("🛠 Add doc");
+    });
+  });
+
+  describe("header-max-length", () => {
+    it("should throw if max length is exceeded", () => {
+      setLintRules({ "header-max-length": [2, { max: 10 }] });
+      expect(lint("🛠 123445678910")).toHaveError("header-max-length");
+    });
+
+    it("should not throw if max length is respected", () => {
+      setLintRules({ "header-max-length": [2, { max: 20 }] });
+      expect(lint("🛠 123445678910")).not.toHaveError("header-max-length");
+    });
+  });
+
+  describe("header-full-stop", () => {
+    it("should add full stop if not present", () => {
+      setLintRules({ "header-full-stop": true });
+      expect(lint("🐛 Commit")).toHaveCommit("🐛 Commit.");
+      expect(lint("🐛 Commit.")).toHaveCommit("🐛 Commit.");
+    });
+
+    it("should remove full stop if present", () => {
+      setLintRules({ "header-full-stop": [2, { never: true }] });
+      expect(lint("🐛 Commit")).toHaveCommit("🐛 Commit");
+      expect(lint("🐛 Commit.")).toHaveCommit("🐛 Commit");
+      expect(
+        lint("🐛 Commit.\n\neven if it is on multiple lines\nHello!")
+      ).toHaveCommit("🐛 Commit\n\neven if it is on multiple lines\nHello!");
+    });
+
+    it("should ignore release commits ", () => {
+      setLintRules({ "header-full-stop": true });
+      expect(lint("🔖 v0.1.0")).toHaveCommit("🔖 v0.1.0");
+    });
+  });
+
+  describe("subject-case", () => {
+    it("should correct case if wrong casing is provided", () => {
+      setLintRules({ "subject-case": [2, { case: "sentence-case" }] });
+      expect(lint("🛠 hello!\n\nmy commit")).toHaveCommit(
+        "🛠 Hello!\n\nmy commit"
+      );
+      expect(lint("🔖 v0.1.0")).toHaveCommit("🔖 v0.1.0");
+    });
+  });
+
+  describe("body-leading-blank", () => {
+    it("should force leading blank line in body", () => {
+      setLintRules({ "body-leading-blank": true });
+      expect(lint("🛠 hello!\n\nmy commit")).not.toHaveError(
+        "body-leading-blank"
+      );
+      expect(lint("🛠 hello!\nmy commit")).toHaveError("body-leading-blank");
+      expect(lint("🛠 hello!")).not.toHaveError("body-leading-blank");
+    });
+
+    it("should ignore leading blank line if disabled", () => {
+      setLintRules({ "body-leading-blank": false });
+      expect(lint("🛠 hello!\n\nmy commit")).not.toHaveError(
+        "body-leading-blank"
+      );
+      expect(lint("🛠 hello!\nmy commit")).not.toHaveError("body-leading-blank");
+      expect(lint("🛠 hello!")).not.toHaveError("body-leading-blank");
+    });
+  });
+
+  describe("other kind of commits", () => {
+    it("should allow merge commits", () => {
+      setLintRules({
+        "header-full-stop": true,
+        "subject-require": true,
+        "emoji-require": true
+      });
+      expect(
+        lint("Merge branch 'master' into my-feat-branch").errors
+      ).toHaveLength(0);
     });
   });
 

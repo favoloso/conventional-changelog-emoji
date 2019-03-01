@@ -10,5 +10,8 @@ module.exports = function toCase(wanted, message) {
 
     case "sentence-case":
       return message.charAt(0).toUpperCase() + message.slice(1);
+
+    default:
+      throw new Error(`Case "${wanted}" not recognized.`);
   }
 };

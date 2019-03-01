@@ -13,6 +13,6 @@ module.exports = {
     "BREAKING CHANGES",
     ...emoji.breakingEmojis
   ],
-  revertPattern: /^revert:\s([\s\S]*?)\s*This reverts commit (\w*)\./,
+  revertPattern: /^(R|r)evert:\s([\s\S]*?)\s*This reverts commit (\w*)\./,
   revertCorrespondence: ["header", "hash"]
 };

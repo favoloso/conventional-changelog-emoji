@@ -6,7 +6,12 @@ module.exports = {
   rules: {
     "emoji-from-type": true,
     "emoji-known": true,
+    "emoji-require": false,
     "spaces-between": true,
-    "subject-case": [2, { case: "sentence-case" }]
+    "header-full-stop": false,
+    "header-max-length": false,
+    "subject-case": [2, { case: "sentence-case" }],
+    "subject-require": true,
+    "body-leading-blank": true
   }
 };

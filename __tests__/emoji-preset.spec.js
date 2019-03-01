@@ -261,7 +261,7 @@ describe("emoji preset", () => {
         }
       });
       return getChangelog().then(changelog => {
-        console.log(changelog);
+        // console.log(changelog);
         expect(changelog.indexOf("📦")).toBeLessThan(changelog.indexOf("🚦"));
         expect(changelog.indexOf("✨")).toBeLessThan(changelog.indexOf("📦"));
       });

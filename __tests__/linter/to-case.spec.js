@@ -14,4 +14,8 @@ describe("toCase helper", () => {
       "Let 🎉 it go demo"
     );
   });
+
+  it("should throw on unknown case", () => {
+    expect(() => toCase("abc-case", "Hello!")).toThrow();
+  });
 });

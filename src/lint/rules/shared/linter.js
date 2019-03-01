@@ -1,6 +1,6 @@
 const Severity = {
-  fix: 3,
   error: 2,
+  warn: 1,
   ignore: 0
 };
 
@@ -25,7 +25,6 @@ function resolveRuleOptions(config, rule) {
 
 function error(message) {
   return {
-    severity: Severity.error,
     message: message
   };
 }

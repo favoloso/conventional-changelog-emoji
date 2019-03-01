@@ -1,12 +1,17 @@
 const config = require("../config/config");
-const parseCommit = require("./parse-commit");
+const parseCommit = require("./parse/parse-commit");
 const linter = require("./rules/shared/linter");
 
 const rules = [
   require("./rules/emoji-from-type"),
+  require("./rules/emoji-require"),
   require("./rules/emoji-known"),
   require("./rules/spaces-between"),
-  require("./rules/subject-case")
+  require("./rules/header-full-stop"),
+  require("./rules/header-max-length"),
+  require("./rules/subject-case"),
+  require("./rules/subject-require"),
+  require("./rules/body-leading-blank")
 ];
 
 /**
@@ -18,8 +23,17 @@ module.exports = function lintCommitMessage(commit) {
     throw new Error('You should pass a message to "lintCommitMessage".');
   }
 
-  // Parse
+  // Parse and ignore if `parseCommit` ignores the commit.
   let tokens = parseCommit(commit);
+  if (tokens == null) {
+    return {
+      errors: [],
+      commit,
+      changed: false
+    };
+  }
+
+  // console.log(tokens);
 
   // Apply Linters
   const linted = rules.reduce(
@@ -36,16 +50,20 @@ module.exports = function lintCommitMessage(commit) {
 
       // Replace commit (fixed).
       if (typeof partial === "string") {
-        console.log(
-          `[${rule.name}] Replace commit "${result.commit}" with "${partial}"`
-        );
+        // console.log(
+        //   `[${rule.name}] Replace commit "${result.commit}" with "${partial}"`
+        // );
         result.commit = partial;
         tokens = parseCommit(result.commit);
         return result;
       }
 
       // An error occurred.
-      result.lints.push({ ...partial, rule: rule.name });
+      result.lints.push({
+        ...partial,
+        severity: options.severity,
+        rule: rule.name
+      });
       return result;
     },
     {
