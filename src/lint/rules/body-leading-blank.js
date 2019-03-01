@@ -1,6 +1,6 @@
 const linter = require("./shared/linter");
 
-const BODY_LEADING_BLANK_REGEX = /^([^\n]*)(\n\n([\s\S]+))?$/;
+const BODY_LEADING_BLANK_REGEX = /^([^\n]*)(\n|\n\n([\s\S]+))?$/;
 
 /**
  * Body should begin with a leading blank line as of conventional commits
