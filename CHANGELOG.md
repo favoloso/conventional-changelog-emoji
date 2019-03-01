@@ -1,3 +1,28 @@
+# [0.8.0](https://github.com/favoloso/conventional-changelog-emoji/compare/v0.7.0...v0.8.0) (2019-03-01)
+
+### ✨ Features
+
+- Add body, header and subject lint rules ([7b7f5a7](https://github.com/favoloso/conventional-changelog-emoji/commit/7b7f5a7))
+- Add linter formatted messages ([adfe690](https://github.com/favoloso/conventional-changelog-emoji/commit/adfe690))
+- Add linting system ([f669617](https://github.com/favoloso/conventional-changelog-emoji/commit/f669617))
+
+### 🛠 Improvements
+
+- Enable `emoji-require` rule by default ([c1b7587](https://github.com/favoloso/conventional-changelog-emoji/commit/c1b7587))
+- Enhanced lint messages formatting ([954b796](https://github.com/favoloso/conventional-changelog-emoji/commit/954b796))
+
+### 🐛 Bug Fixes
+
+- Fix body leading when terminating with \n ([9ed4d17](https://github.com/favoloso/conventional-changelog-emoji/commit/9ed4d17))
+
+### 📚 Documentation
+
+- Adds linter rules documentation ([82bba6c](https://github.com/favoloso/conventional-changelog-emoji/commit/82bba6c))
+
+### 🏗 Chore
+
+- Rename bin to `emoji-commit-lint` ([d271cd3](https://github.com/favoloso/conventional-changelog-emoji/commit/d271cd3))
+
 # [0.7.0](https://github.com/favoloso/conventional-changelog-emoji/compare/v0.6.0...v0.7.0) (2019-02-27)
 
 ### ✨ Features
