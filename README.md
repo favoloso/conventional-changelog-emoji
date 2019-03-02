@@ -82,6 +82,11 @@ The package works as-is, but its behaviour may be customized with the following 
 
   > 4.  Major version zero (0.y.z) is for initial development. Anything may change at any time. The public API should not be considered stable.
 
+- **`language`** (default: `en`)
+
+  Allows to translate commits group heading in `CHANGELOG.md` (i.e. `🐛 Bug Fixes`) and in linter messages.
+  Languages available: `en`, `it`
+
 ### Example config in package.json
 
 ```json
