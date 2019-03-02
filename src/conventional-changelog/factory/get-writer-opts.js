@@ -1,5 +1,6 @@
 const emoji = require("../../emoji/emoji");
 const config = require("../../config/config");
+const translator = require("../../translation/translator")();
 const commitGroupsSort = require("./commit-groups-sort");
 
 /**
@@ -11,11 +12,12 @@ module.exports = function getWriterOpts() {
   return {
     transform(commit, context) {
       let issues = [];
+
       if (commit.emoji != null) {
         const group = emoji.findEmoji(commit.emoji);
         if (group == null || !group.inChangelog) return null;
 
-        commit.type = group.heading;
+        commit.type = translator.translateHeading(group);
       } else {
         // Skip without emoji
         return null;

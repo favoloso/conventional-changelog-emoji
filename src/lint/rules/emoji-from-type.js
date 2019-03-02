@@ -15,11 +15,7 @@ module.exports = {
     const type = matches[1].toLowerCase();
     const group = emoji.findEmojiByType(type);
     if (!group) {
-      return linter.error(
-        `Type Alias "${type}" is not allowed. It should be one of: "${emoji.list
-          .map(e => e.type)
-          .join(", ")}"`
-      );
+      return linter.error(type, emoji.list.map(e => e.type).join(", "));
     }
 
     // Remove `fix` ~> `fix:` ~ `🐛`

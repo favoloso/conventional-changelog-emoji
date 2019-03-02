@@ -11,8 +11,6 @@ module.exports = {
       return null;
     }
 
-    return linter.error(
-      `Header max length is ${options.args.max} characters, ${tokens.header.length} provided.` // prettier-ignore
-    );
+    return linter.error(options.args.max, tokens.header.length);
   }
 };

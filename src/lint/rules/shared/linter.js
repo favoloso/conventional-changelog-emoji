@@ -23,9 +23,9 @@ function resolveRuleOptions(config, rule) {
   };
 }
 
-function error(message) {
+function error(...args) {
   return {
-    message: message
+    args
   };
 }
 

@@ -12,6 +12,6 @@ module.exports = {
     // console.log(tokens.commit.match(BODY_LEADING_BLANK_REGEX));
     if (BODY_LEADING_BLANK_REGEX.test(tokens.commit)) return null;
 
-    return linter.error(`Body should begin with a leading blank line.`);
+    return linter.error();
   }
 };

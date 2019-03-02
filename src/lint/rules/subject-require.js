@@ -8,8 +8,6 @@ module.exports = {
   rule: function(ctx, options, tokens) {
     if (tokens.subject) return null;
 
-    return linter.error(
-      `Subject is required, but it's not present in "${tokens.header}".` // prettier-ignore
-    );
+    return linter.error(tokens.header);
   }
 };

@@ -8,8 +8,6 @@ module.exports = {
   rule: function(ctx, options, tokens) {
     if (tokens.emoji) return null;
 
-    return linter.error(
-      `Emoji is required, but it's not present in "${tokens.header}".` // prettier-ignore
-    );
+    return linter.error(tokens.header);
   }
 };
