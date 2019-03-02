@@ -19,8 +19,6 @@ module.exports = {
 
     if (emojis.findEmoji(tokens.emoji)) return null;
 
-    return linter.error(
-      `Emoji "${tokens.emoji}" is not allowed. It should be one of: ${emojis.list.map(l => l.emoji).join(", ")}` // prettier-ignore
-    );
+    return linter.error(tokens.emoji, emojis.list.map(l => l.emoji).join(", "));
   }
 };

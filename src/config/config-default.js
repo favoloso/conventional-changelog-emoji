@@ -1,5 +1,5 @@
 module.exports = {
-  fixAliasedEmoji: false,
+  language: "en",
   showEmojiPerCommit: false,
   minorForBreakingInDevelopment: true,
   emojis: {},

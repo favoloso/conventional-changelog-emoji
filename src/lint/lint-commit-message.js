@@ -1,6 +1,7 @@
 const config = require("../config/config");
 const parseCommit = require("./parse/parse-commit");
 const linter = require("./rules/shared/linter");
+const translator = require("../translation/translator")();
 const formatLintIssues = require("./format/format-lint-issues");
 
 const rules = [
@@ -62,7 +63,7 @@ function lintCommitMessage(commit) {
 
       // An error occurred.
       result.errors.push({
-        ...partial,
+        message: translator.translateRule(rule.name, ...partial.args),
         severity: options.severity,
         rule: rule.name
       });

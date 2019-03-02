@@ -352,4 +352,23 @@ describe("emoji preset", () => {
       });
     });
   });
+
+  describe("heading translations", () => {
+    it("should allow to translate headings", () => {
+      gitCommit("🚦 test");
+      gitCommit("✨ feat");
+      gitCommit("📦 build");
+      gitCommit("⚡️ perfo");
+      gitCommit("🛠 improvement");
+      jest.setMock("../src/config/config", {
+        language: "it"
+      });
+      return getChangelog().then(changelog => {
+        expect(changelog).toContainString("### ⚡️ Performance");
+        expect(changelog).toContainString("### ✨ Nuove Funzionalità");
+        expect(changelog).toContainString("### 🛠 Migliorie");
+        expect(changelog).not.toContainString("### ✨ Features");
+      });
+    });
+  });
 });

@@ -1,12 +1,12 @@
 const emojiRegex = require("emoji-regex")();
-const emoji = require("../../emoji/emoji");
+const translator = require("../../translation/translator")();
 
 /**
  * Order groups by emoji configuration.
  */
 module.exports = function commitGroupsSort(commitGroup, otherCommitGroup) {
-  const group = emoji.list.find(g => g.heading === commitGroup.title);
-  const other = emoji.list.find(g => g.heading === otherCommitGroup.title);
+  const group = translator.findGroupByHeading(commitGroup.title); //emoji.list.find(g => g.heading === commitGroup.title);
+  const other = translator.findGroupByHeading(otherCommitGroup.title); // emoji.list.find(g => g.heading === otherCommitGroup.title);
 
   return group.index === other.index
     ? group.heading

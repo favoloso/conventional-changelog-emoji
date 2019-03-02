@@ -1,5 +1,6 @@
 const emojiGroups = require("./emoji-groups");
 const emojiConfigLoader = require("./emoji-config-loader");
+
 const emojiRegex = require("emoji-regex/text")();
 
 /**
@@ -82,15 +83,26 @@ function normalizeEmojiGroup(group) {
 const baseGroups = emojiGroups.map(normalizeEmojiGroup);
 const groups = emojiConfigLoader(baseGroups).map(normalizeEmojiGroup);
 
-const commitRegex = new RegExp(
-  `^(${emojiRegex.source})(\\s*)([\\s\\S]*)$`,
-  "g"
+/**
+ * We create a regex based on provided Emoji (and their Emoji Aliases)
+ * in order to fix bugs with `emoji-regex` regex, atleast to be sure
+ * changelog emojis are always available.
+ */
+const groupsEmojiRegex = groups
+  .reduce((emojis, g) => {
+    emojis.push(g.emoji, ...g.aliases);
+    return emojis;
+  }, [])
+  .join("|");
+
+const headerRegex = new RegExp(
+  `^(${groupsEmojiRegex}|${emojiRegex.source})(\\s*)(.*)$`
 );
 
 module.exports = {
   list: groups,
   baseList: baseGroups,
-  commitRegex,
+  headerRegex,
   featureEmojis: emojisByBump("minor"),
   breakingEmojis: emojisByBump("major"),
   releaseEmoji: groups.find(g => g.type === "release"),
