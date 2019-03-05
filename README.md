@@ -26,7 +26,7 @@ conventional-changelog -p @favoloso/emoji -i CHANGELOG.md -s
 
 ## Lint (and fix) commit messages
 
-This package provides an additional bin script `emoji-lint-commit`.
+This package provides an additional bin script `emoji-commit-lint`.
 
 The scripts **lints and eventually changes commit messages**, from traditional conventional changelog
 format (i.e. `feat: Add a magic feature`) to corresponding emoji (i.e. `✨ Add a magic feature`),
@@ -44,7 +44,7 @@ Now in your package.json add:
 ```json
 {
   "husky": {
-    "commit-msg": "emoji-lint-commit"
+    "commit-msg": "emoji-commit-lint"
   }
 }
 ```
@@ -92,7 +92,6 @@ The package works as-is, but its behaviour may be customized with the following 
 ```json
 {
   "favolosoEmoji": {
-    "fixAliasedEmoji": true,
     "showEmojiPerCommit": false
   }
 }
