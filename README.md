@@ -44,7 +44,9 @@ Now in your package.json add:
 ```json
 {
   "husky": {
-    "commit-msg": "emoji-commit-lint"
+    "hooks": {
+      "commit-msg": "emoji-commit-lint"
+    }
   }
 }
 ```
