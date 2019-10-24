@@ -31,15 +31,14 @@ plugin](https://github.com/release-it/conventional-changelog) (v11+) with the
 `@favoloso/emoji` preset.
 
 ```json
-  "release-it": {
-    // ...
-    "plugins": {
-      "@release-it/conventional-changelog": {
-        "preset": "@favoloso/emoji",
-        "infile": "CHANGELOG.md"
-      }
+"release-it": {
+  "plugins": {
+    "@release-it/conventional-changelog": {
+      "preset": "@favoloso/emoji",
+      "infile": "CHANGELOG.md"
     }
   }
+}
 ```
 
 ## Lint (and fix) commit messages
