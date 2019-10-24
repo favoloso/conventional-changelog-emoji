@@ -38,5 +38,14 @@ describe("translator", () => {
         `"Il <body> del commit deve iniziare con una nuova linea (\\\\n)"`
       );
     });
+
+    it("should replace arguments", () => {
+      setConfig({ language: "it" });
+      expect(
+        translator().translateRule("emoji-from-type", "fi", "fix, feat")
+      ).toMatchInlineSnapshot(
+        `"Il tipo \\"fi\\" non è permesso. Deve essere uno fra: fix, feat."`
+      );
+    });
   });
 });

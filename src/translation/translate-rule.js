@@ -4,7 +4,7 @@
  */
 module.exports = function translateRule(strings, rule, ...args) {
   return strings.rules[rule].replace(
-    /\$([0-9]+)/,
+    /\$([0-9]+)/g,
     (match, index) => args[parseInt(index, 10)]
   );
 };
