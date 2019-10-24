@@ -1,3 +1,19 @@
+# [0.10.0](https://github.com/favoloso/conventional-changelog-emoji/compare/v0.9.0...v0.10.0) (2019-10-24)
+
+### ✨ Features
+
+- Add support for breaking changes bump in commit messages ([1612535](https://github.com/favoloso/conventional-changelog-emoji/commit/1612535))
+
+### 🐛 Bug Fixes
+
+- Replace correctly arguments when linter errors are shown ([79ba400](https://github.com/favoloso/conventional-changelog-emoji/commit/79ba400))
+
+### 📚 Documentation
+
+- Add release-it example ([09207e9](https://github.com/favoloso/conventional-changelog-emoji/commit/09207e9))
+- Fix husky snippet ([5fd7d4f](https://github.com/favoloso/conventional-changelog-emoji/commit/5fd7d4f))
+- Fixed scripts in the README ([8081f39](https://github.com/favoloso/conventional-changelog-emoji/commit/8081f39))
+
 # [0.9.0](https://github.com/favoloso/conventional-changelog-emoji/compare/v0.8.0...v0.9.0) (2019-03-02)
 
 ### ✨ Features
