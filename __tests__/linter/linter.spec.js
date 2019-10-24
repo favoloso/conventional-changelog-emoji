@@ -245,6 +245,18 @@ describe("linter", () => {
         `"✅ No issues found in commit style"`
       );
     });
+
+    it("should replace placeholder for arguments from original string", () => {
+      setLintRules();
+      const linted = lint("fi: A fix");
+      expect(formatLintIssues(linted)).toMatchInlineSnapshot(`
+"Commit do not lints based on your \\"emoji-commit-lint\\" rules:
+
+• 🔴 [emoji-from-type] Type Alias \\"fi\\" is not allowed. It should be one of: breaking, feat, security, improvement, perf, fix, docs, chore, refactor, test, style, build, release, wip.
+• 🔴 [emoji-require] Emoji is required, but it's not present in \\"fi: A fix\\".
+• 🔴 [subject-require] Subject is required, but it's not present in \\"fi: A fix\\"."
+`);
+    });
   });
 
   describe("cli", () => {

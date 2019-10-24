@@ -40,6 +40,7 @@ describe("translator", () => {
     });
 
     it("should replace arguments", () => {
+      setConfig({ language: "it" });
       expect(
         translator().translateRule("emoji-from-type", "fi", "fix, feat")
       ).toMatchInlineSnapshot(

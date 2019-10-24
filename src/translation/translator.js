@@ -8,7 +8,7 @@ module.exports = function() {
 
   return {
     translateHeading: group => translateHeading(strings, group),
-    translateRule: (rule, args) => translateRule(strings, rule, args),
+    translateRule: (rule, ...args) => translateRule(strings, rule, ...args),
     findGroupByHeading: heading => findGroupByHeading(strings, heading)
   };
 };
