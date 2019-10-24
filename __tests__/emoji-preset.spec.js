@@ -228,6 +228,14 @@ describe("emoji preset", () => {
         expect(recommendation.releaseType).toEqual("major");
       });
     });
+
+    it("should allow breaking changes directly from commits", () => {
+      gitTag("v1.0.0");
+      gitCommit("🚨 breaking!");
+      return getBump().then(recommendation => {
+        expect(recommendation.releaseType).toEqual("major");
+      });
+    });
   });
 
   describe("changelog groups order", () => {

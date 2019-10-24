@@ -22,10 +22,21 @@ module.exports = Q.all([gitSemverTags()]).spread(tags => {
       let features = 0;
 
       commits.forEach(commit => {
+        // Breaking changes in commit notes
         if (commit.notes.length > 0) {
           breakings += commit.notes.length;
           level = breakingLevel;
-        } else if (
+        }
+        // Breaking changes in commit message (emoji)
+        else if (
+          commit.emoji &&
+          emoji.breakingEmojis.some(emoji => emoji === commit.emoji)
+        ) {
+          breakings += 1;
+          level = breakingLevel;
+        }
+        // Feature commit
+        else if (
           commit.emoji &&
           emoji.featureEmojis.some(emoji => emoji === commit.emoji)
         ) {
