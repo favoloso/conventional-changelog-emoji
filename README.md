@@ -24,6 +24,24 @@ npm install --save-dev @favoloso/conventional-changelog-emoji
 conventional-changelog -p @favoloso/emoji -i CHANGELOG.md -s
 ```
 
+### Usage with `release-it`
+
+You can use [conventional-changelog
+plugin](https://github.com/release-it/conventional-changelog) (v11+) with the
+`@favoloso/emoji` preset.
+
+```json
+  "release-it": {
+    // ...
+    "plugins": {
+      "@release-it/conventional-changelog": {
+        "preset": "@favoloso/emoji",
+        "infile": "CHANGELOG.md"
+      }
+    }
+  }
+```
+
 ## Lint (and fix) commit messages
 
 This package provides an additional bin script `emoji-commit-lint`.
