@@ -31,10 +31,10 @@ module.exports = [
     index: 90
   },
   {
-    emoji: "🛠",
+    emoji: "🛠️",
     type: "improvement",
     inChangelog: true,
-    heading: "🛠 Improvements",
+    heading: "🛠️ Improvements",
     typeAliases: ["imp"],
     index: 30
   },
@@ -47,10 +47,10 @@ module.exports = [
     index: 35
   },
   {
-    emoji: "🏗",
+    emoji: "🏗️",
     type: "chore",
     inChangelog: true,
-    heading: "🏗 Chore",
+    heading: "🏗️ Chore",
     aliases: ["⚙️"],
     typeAliases: ["chores"],
     index: 60
