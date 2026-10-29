@@ -1,23 +1,21 @@
 "use strict";
 
-const Q = require("q");
-const conventionalChangelog = require("./src/conventional-changelog/conventional-changelog");
-const recommendedBumpOpts = require("./src/conventional-changelog/conventional-recommended-bump");
 const parserOpts = require("./src/conventional-changelog/parser-opts");
-const writerOpts = require("./src/conventional-changelog/writer-opts");
+const getWriterOpts = require("./src/conventional-changelog/factory/get-writer-opts");
+const getWhatBump = require("./src/conventional-changelog/factory/get-what-bump");
+const gitSemverTags = require("./src/utils/git-semver-tags");
 
-module.exports = Q.all([
-  conventionalChangelog,
-  parserOpts,
-  recommendedBumpOpts,
-  writerOpts
-]).spread(
-  (conventionalChangelog, parserOpts, recommendedBumpOpts, writerOpts) => {
-    return {
-      conventionalChangelog,
-      parserOpts,
-      recommendedBumpOpts,
-      writerOpts
-    };
-  }
-);
+/**
+ * Preset factory for `conventional-changelog` v8+ and
+ * `conventional-recommended-bump` v12+
+ * (i.e. `@release-it/conventional-changelog` v12+).
+ */
+module.exports = async function createPreset() {
+  const tags = await gitSemverTags();
+
+  return {
+    parser: parserOpts,
+    writer: getWriterOpts(),
+    whatBump: getWhatBump(tags)
+  };
+};

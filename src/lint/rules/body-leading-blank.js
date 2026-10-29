@@ -8,7 +8,7 @@ const BODY_LEADING_BLANK_REGEX = /^([^\n]*)(\n|\n\n([\s\S]+))?$/;
  */
 module.exports = {
   name: "body-leading-blank",
-  rule: function(ctx, options, tokens) {
+  rule: function (ctx, options, tokens) {
     // console.log(tokens.commit.match(BODY_LEADING_BLANK_REGEX));
     if (BODY_LEADING_BLANK_REGEX.test(tokens.commit)) return null;
 

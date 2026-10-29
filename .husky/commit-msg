@@ -1,0 +1,1 @@
+HUSKY_GIT_PARAMS="$1" node src/bin/emoji-commit-lint.js

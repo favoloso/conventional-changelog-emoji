@@ -6,7 +6,7 @@ const linter = require("./shared/linter");
 module.exports = {
   name: "header-max-length",
   args: ["max"],
-  rule: function(ctx, options, tokens) {
+  rule: function (ctx, options, tokens) {
     if (tokens.header.length <= options.args.max) {
       return null;
     }

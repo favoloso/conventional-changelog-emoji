@@ -3,7 +3,7 @@ const translateHeading = require("./translate-heading");
 const translateRule = require("./translate-rule");
 const findGroupByHeading = require("./find-group-by-heading");
 
-module.exports = function() {
+module.exports = function () {
   const strings = getLanguageStrings();
 
   return {

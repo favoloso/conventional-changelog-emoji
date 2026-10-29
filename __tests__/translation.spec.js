@@ -17,7 +17,7 @@ describe("translator", () => {
 
   it("should throw if language is not found", () => {
     setConfig({ language: "xyz-hello" });
-    expect(() => translator().translateRule("abc")).toThrowError(
+    expect(() => translator().translateRule("abc")).toThrow(
       /^Language "xyz-hello" is not available\./
     );
   });
@@ -35,7 +35,7 @@ describe("translator", () => {
       expect(
         translator().translateRule("body-leading-blank")
       ).toMatchInlineSnapshot(
-        `"Il <body> del commit deve iniziare con una nuova linea (\\\\n)"`
+        `"Il <body> del commit deve iniziare con una nuova linea (\\n)"`
       );
     });
 
@@ -44,7 +44,7 @@ describe("translator", () => {
       expect(
         translator().translateRule("emoji-from-type", "fi", "fix, feat")
       ).toMatchInlineSnapshot(
-        `"Il tipo \\"fi\\" non è permesso. Deve essere uno fra: fix, feat."`
+        `"Il tipo "fi" non è permesso. Deve essere uno fra: fix, feat."`
       );
     });
   });

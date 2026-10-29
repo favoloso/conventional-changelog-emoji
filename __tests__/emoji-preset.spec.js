@@ -1,80 +1,78 @@
 "use strict";
 const fs = require("fs");
+const os = require("os");
 const path = require("path");
-const shell = require("shelljs");
+const { execFileSync } = require("child_process");
 
-const root = path.resolve(__dirname, "..");
-const tmp = path.resolve(root, "tmp");
+const runner = path.resolve(__dirname, "utils/run-preset.mjs");
+
+let repo;
 
 // Utils
 
+function git(...args) {
+  execFileSync("git", args, { cwd: repo, stdio: "ignore" });
+}
+
 function prepareRepo() {
-  shell.config.silent = true;
-  shell.cd(root);
-  shell.rm("-rf", "tmp");
-  shell.mkdir("tmp");
-  shell.cd("tmp");
-  shell.mkdir("git-templates");
-  shell.exec("git init --template=./git-templates");
-  shell.exec(`git commit -m "initial commit" --allow-empty --no-gpg-sign`);
+  repo = fs.mkdtempSync(path.join(os.tmpdir(), "favoloso-emoji-"));
+  setConfig({});
+  git("init");
+  git("config", "user.name", "Test");
+  git("config", "user.email", "test@example.com");
+  git("config", "core.hooksPath", "/dev/null");
+  gitCommit("initial commit");
 }
 
-function getChangelog() {
-  return new Promise((resolve, reject) => {
-    try {
-      const preset = require("..");
-
-      const conventionalChangelogCore = require("conventional-changelog-core");
-      let filename = path.resolve(__dirname, ".CHANGELOG.md");
-      let results = new fs.createWriteStream(filename);
-      conventionalChangelogCore({
-        config: preset,
-        warn: (...m) => console.log(...m)
-      })
-        .on("error", err => {
-          reject(err);
-        })
-        .pipe(results);
-
-      results.on("finish", () => {
-        let changelog = fs.readFileSync(filename);
-        fs.unlinkSync(filename);
-        resolve(changelog.toString());
-      });
-    } catch (e) {
-      reject(e);
-    }
-  });
-}
-
-function getBump() {
-  return new Promise((resolve, reject) => {
-    const preset = require("..");
-    const conventionalRecommendedBump = require("conventional-recommended-bump");
-    conventionalRecommendedBump(
-      {
-        config: preset,
-        warn: (...m) => console.log(...m)
-      },
-      (error, recommendation) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(recommendation);
-        }
-      }
-    );
-  });
+/**
+ * Configuration is read from `package.json` in the repository, like in
+ * real projects.
+ */
+function setConfig(favolosoEmoji) {
+  fs.writeFileSync(
+    path.join(repo, "package.json"),
+    JSON.stringify({
+      name: "test",
+      version: "99.0.0",
+      repository: "https://github.com/favoloso/test",
+      favolosoEmoji
+    })
+  );
 }
 
 function gitCommit(message) {
-  shell.cd(tmp);
-  shell.exec(`git commit -m "${message}" --allow-empty --no-gpg-sign`);
+  git("commit", "--allow-empty", "--no-gpg-sign", "-m", message);
 }
 
 function gitTag(tag) {
-  shell.cd(tmp);
-  shell.exec(`git tag -a ${tag} -m "version ${tag}"`);
+  git("tag", "-a", tag, "-m", `version ${tag}`);
+}
+
+function run() {
+  return JSON.parse(
+    execFileSync(process.execPath, [runner], {
+      cwd: repo,
+      encoding: "utf8",
+      stdio: ["ignore", "pipe", "pipe"]
+    })
+  );
+}
+
+function getChangelog() {
+  return run().changelog;
+}
+
+function getBump() {
+  return run().releaseType;
+}
+
+function getError() {
+  try {
+    run();
+  } catch (e) {
+    return e.stderr;
+  }
+  throw new Error("Preset should have failed");
 }
 
 expect.extend({
@@ -93,16 +91,21 @@ expect.extend({
 
 describe("emoji preset", () => {
   beforeEach(() => {
-    jest.resetModules();
-    jest.setMock(
-      "../src/config/config",
-      require("../src/config/config-default")
-    );
     prepareRepo();
   });
 
   afterEach(() => {
-    shell.cd("..");
+    fs.rmSync(repo, { recursive: true, force: true });
+  });
+
+  it("should export a function returning parser, writer and whatBump", () => {
+    const createPreset = require("..");
+    expect(typeof createPreset).toBe("function");
+    return createPreset().then(preset => {
+      expect(Object.keys(preset)).toEqual(["parser", "writer", "whatBump"]);
+      expect(preset.writer.template).toBeInstanceOf(Function);
+      expect(preset.whatBump).toBeInstanceOf(Function);
+    });
   });
 
   it("should work with all kind of commits", () => {
@@ -113,128 +116,118 @@ describe("emoji preset", () => {
     gitCommit("🚧 lavori in corso temporaneo");
     gitCommit("📚 Aggiunta anche la documentazione X Y Z");
 
-    return getChangelog().then(changelog => {
-      expect(changelog).toEqual(expect.stringContaining("#56"));
-      expect(changelog).toEqual(expect.stringContaining("### ✨ Features"));
-      expect(changelog).toEqual(expect.stringContaining("### 🐛 Bug Fixes"));
-      expect(changelog).toEqual(
-        expect.stringContaining("### 🚨 Breaking Changes")
-      );
+    const changelog = getChangelog();
+    expect(changelog).toContainString(
+      "* Corretto un bug ([#56](https://github.com/favoloso/test/issues/56))"
+    );
+    expect(changelog).toContainString("### ✨ Features");
+    expect(changelog).toContainString("### 🐛 Bug Fixes");
+    expect(changelog).toContainString("### 🚨 Breaking Changes");
 
-      expect(changelog).not.toEqual(expect.stringContaining("WIP"));
-      expect(changelog).not.toEqual(expect.stringContaining("🚧"));
-      expect(changelog).not.toEqual(expect.stringContaining("Bad"));
-      expect(changelog).not.toEqual(expect.stringContaining("#41"));
-    });
+    expect(changelog).not.toContainString("WIP");
+    expect(changelog).not.toContainString("🚧");
+  });
+
+  it("should render header, commits and links", () => {
+    gitTag("v1.0.0");
+    gitCommit("🐛 Fix @mario issue\n\nCloses #12");
+
+    const changelog = getChangelog();
+    expect(changelog).toMatch(
+      /^# \[99\.0\.0\]\(https:\/\/github\.com\/favoloso\/test\/compare\/v1\.0\.0\.\.\.v99\.0\.0\) \(\d{4}-\d{2}-\d{2}\)\n\n\n### 🐛 Bug Fixes\n\n\* Fix \[@mario\]\(https:\/\/github\.com\/mario\) issue \(\[[0-9a-f]{7}\]\(https:\/\/github\.com\/favoloso\/test\/commit\/[0-9a-f]{7}\)\), closes \[#12\]\(https:\/\/github\.com\/favoloso\/test\/issues\/12\)\n$/
+    );
   });
 
   it("should recognize BREAKING CHANGE note", () => {
     gitCommit("🐛 Fix feat\n\nBREAKING CHANGE: Xyz");
-    return getChangelog().then(changelog => {
-      expect(changelog).toContainString("### 🚨 Breaking Changes");
-    });
+    const changelog = getChangelog();
+    expect(changelog).toContainString("### 🚨 Breaking Changes\n\n* Xyz\n");
   });
 
   it("should recognize breaking change emoji", () => {
     gitCommit("🚨 Breaking commit");
-    return getChangelog().then(changelog => {
-      expect(changelog).toContainString("### 🚨 Breaking Changes");
-    });
+    expect(getChangelog()).toContainString("### 🚨 Breaking Changes");
   });
 
   it("should ignore emoji after the first one and put them in the subject", () => {
     gitCommit("🌟🛠 Multiemoji parsing");
-    return getChangelog().then(changelog => {
-      expect(changelog).toContainString("### ✨ Features");
-      expect(changelog).toContainString("Multiemoji");
-    });
+    const changelog = getChangelog();
+    expect(changelog).toContainString("### ✨ Features");
+    expect(changelog).toContainString("Multiemoji");
+  });
+
+  it("should group emojis with or without variation selector together", () => {
+    gitCommit("🛠 senza selettore");
+    gitCommit("🛠️ con selettore");
+    gitCommit("🏗 chore senza selettore");
+    const changelog = getChangelog();
+    expect(changelog.match(/### 🛠️ Improvements/g)).toHaveLength(1);
+    expect(changelog).toContainString("* senza selettore");
+    expect(changelog).toContainString("* con selettore");
+    expect(changelog).toContainString("* chore senza selettore");
   });
 
   it("should not print emojis for each commit by default", () => {
     gitCommit("🐛 fixed a bug");
-    return getChangelog().then(changelog => {
-      expect(changelog).toContainString("* fixed a bug");
-    });
+    expect(getChangelog()).toContainString("* fixed a bug");
   });
 
   it("should print emojis for each commit if `showEmojiPerCommit` is provided", () => {
     gitCommit("🐛 fixed a bug");
-    jest.setMock("../src/config/config", { showEmojiPerCommit: true });
-    return getChangelog().then(changelog => {
-      expect(changelog).toContainString("* 🐛 fixed a bug");
-    });
+    setConfig({ showEmojiPerCommit: true });
+    expect(getChangelog()).toContainString("* 🐛 fixed a bug");
   });
 
   describe("version bump", () => {
     it("should recommend patch for fixes only", () => {
       gitCommit("🐛 fixed a bug");
-      return getBump().then(recommendation => {
-        expect(recommendation.releaseType).toEqual("patch");
-      });
+      expect(getBump()).toEqual("patch");
     });
 
     it("should recommend patch for other kind of small tasks", () => {
       gitCommit("⚙️ chore something");
       gitCommit("♻️ refactor a b c");
-      return getBump().then(recommendation => {
-        expect(recommendation.releaseType).toEqual("patch");
-      });
+      expect(getBump()).toEqual("patch");
     });
 
     it("should recommend minor for features", () => {
       gitCommit("🐛 fixed a bug");
       gitCommit("✨ sparkles joy with new feat");
-      return getBump().then(recommendation => {
-        expect(recommendation.releaseType).toEqual("minor");
-      });
+      expect(getBump()).toEqual("minor");
     });
 
     it("should recommend major for breaking changes", () => {
       gitTag("v1.0.0");
       gitCommit("🐛 fixed a bug");
       gitCommit("✨ sparkles joy with new feat\n\nBREAKING CHANGE xyz");
-      return getBump().then(recommendation => {
-        expect(recommendation.releaseType).toEqual("major");
-      });
+      expect(getBump()).toEqual("major");
     });
 
     it("should allow 🚨 for breaking changes", () => {
       gitTag("v1.0.0");
       gitCommit("🐛 fixed a bug");
       gitCommit("✨ sparkles joy with new feat\n\n🚨 xyz");
-      return getBump().then(recommendation => {
-        expect(recommendation.releaseType).toEqual("major");
-      });
+      expect(getBump()).toEqual("major");
     });
 
     it("should put breaking changes into a minor in development", () => {
       gitTag("v0.3.2");
       gitCommit("✨ sparkles joy with new feat\n\n🚨 breaking");
-      jest.setMock("../src/config/config", {
-        minorForBreakingInDevelopment: true
-      });
-      return getBump().then(recommendation => {
-        expect(recommendation.releaseType).toEqual("minor");
-      });
+      setConfig({ minorForBreakingInDevelopment: true });
+      expect(getBump()).toEqual("minor");
     });
 
     it("should put breaking changes into a major if configured", () => {
       gitTag("v0.3.2");
       gitCommit("✨ sparkles joy with new feat\n\n🚨 breaking");
-      jest.setMock("../src/config/config", {
-        minorForBreakingInDevelopment: false
-      });
-      return getBump().then(recommendation => {
-        expect(recommendation.releaseType).toEqual("major");
-      });
+      setConfig({ minorForBreakingInDevelopment: false });
+      expect(getBump()).toEqual("major");
     });
 
     it("should allow breaking changes directly from commits", () => {
       gitTag("v1.0.0");
       gitCommit("🚨 breaking!");
-      return getBump().then(recommendation => {
-        expect(recommendation.releaseType).toEqual("major");
-      });
+      expect(getBump()).toEqual("major");
     });
   });
 
@@ -245,12 +238,11 @@ describe("emoji preset", () => {
       gitCommit("🚨 breaking");
       gitCommit("📚 docs");
       gitCommit("🛠 improvement");
-      return getChangelog().then(changelog => {
-        expect(changelog.indexOf("🚨")).toBeLessThan(changelog.indexOf("✨"));
-        expect(changelog.indexOf("✨")).toBeLessThan(changelog.indexOf("🛠"));
-        expect(changelog.indexOf("🛠")).toBeLessThan(changelog.indexOf("🐛"));
-        expect(changelog.indexOf("🐛")).toBeLessThan(changelog.indexOf("📚"));
-      });
+      const changelog = getChangelog();
+      expect(changelog.indexOf("🚨")).toBeLessThan(changelog.indexOf("✨"));
+      expect(changelog.indexOf("✨")).toBeLessThan(changelog.indexOf("🛠"));
+      expect(changelog.indexOf("🛠")).toBeLessThan(changelog.indexOf("🐛"));
+      expect(changelog.indexOf("🐛")).toBeLessThan(changelog.indexOf("📚"));
     });
 
     it("should apply lexical sort to heading when index is the same", () => {
@@ -258,7 +250,7 @@ describe("emoji preset", () => {
       gitCommit("✨ feat");
       gitCommit("📦 build");
       gitCommit("🛠 improvement");
-      jest.setMock("../src/config/config", {
+      setConfig({
         emojis: {
           build: {
             inChangelog: true
@@ -268,17 +260,15 @@ describe("emoji preset", () => {
           }
         }
       });
-      return getChangelog().then(changelog => {
-        // console.log(changelog);
-        expect(changelog.indexOf("📦")).toBeLessThan(changelog.indexOf("🚦"));
-        expect(changelog.indexOf("✨")).toBeLessThan(changelog.indexOf("📦"));
-      });
+      const changelog = getChangelog();
+      expect(changelog.indexOf("📦")).toBeLessThan(changelog.indexOf("🚦"));
+      expect(changelog.indexOf("✨")).toBeLessThan(changelog.indexOf("📦"));
     });
   });
 
   describe("custom emoji configuration", () => {
     it("should allow to override emoji configuration", () => {
-      jest.setMock("../src/config/config", {
+      setConfig({
         emojis: {
           fix: {
             emoji: "🐞",
@@ -287,14 +277,13 @@ describe("emoji preset", () => {
         }
       });
       gitCommit("🐞 A bug fixed");
-      return getChangelog().then(changelog => {
-        expect(changelog).toContainString("🐞 Fiiix!");
-        expect(changelog).not.toContainString("🐛");
-      });
+      const changelog = getChangelog();
+      expect(changelog).toContainString("🐞 Fiiix!");
+      expect(changelog).not.toContainString("🐛");
     });
 
     it("should allow to add other kinds of emoji commits", () => {
-      jest.setMock("../src/config/config", {
+      setConfig({
         emojis: {
           change: {
             emoji: "💼",
@@ -304,14 +293,13 @@ describe("emoji preset", () => {
         }
       });
       gitCommit("💼 Business change");
-      return getChangelog().then(changelog => {
-        expect(changelog).toContainString("* Business change");
-        expect(changelog).toContainString("### 💼 Changes");
-      });
+      const changelog = getChangelog();
+      expect(changelog).toContainString("* Business change");
+      expect(changelog).toContainString("### 💼 Changes");
     });
 
     it("should throw if emoji group misses type or emoji", () => {
-      jest.setMock("../src/config/config", {
+      setConfig({
         emojis: {
           change: {
             inChangelog: true,
@@ -320,44 +308,33 @@ describe("emoji preset", () => {
         }
       });
       gitCommit("💼 Business change");
-      return getChangelog().catch(e => {
-        expect(e).toMatchInlineSnapshot(`
-[Error: Cannot process emoji:
-
-      "{"type":"change","inChangelog":true,"heading":"💼 Changes"}".
-
-      Make sure you are including at least an "emoji" and a "type" property.]
-`);
-      });
+      expect(getError()).toContainString(
+        'Make sure you are including at least an "emoji" and a "type" property.'
+      );
     });
 
     it("should allow to remove existing groups", () => {
-      jest.setMock("../src/config/config", {
+      setConfig({
         emojis: {
           chore: false
         }
       });
       gitCommit("🏗 a chore");
-      return getChangelog().then(changelog => {
-        expect(changelog).not.toContainString("* a chore");
-        expect(changelog).not.toContainString("### 🏗 Chores");
-      });
+      const changelog = getChangelog();
+      expect(changelog).not.toContainString("* a chore");
+      expect(changelog).not.toContainString("### 🏗 Chore");
     });
 
     it("should provide helpful warning if trying to remove undefined emoji", () => {
-      jest.setMock("../src/config/config", {
+      setConfig({
         emojis: {
           choree: false
         }
       });
       gitCommit("🏗 a chore");
-      return getChangelog().catch(e => {
-        expect(e).toMatchObject(
-          new Error(
-            'Cannot remove emoji group "choree" since it is not defined.'
-          )
-        );
-      });
+      expect(getError()).toContainString(
+        'Cannot remove emoji group "choree" since it is not defined.'
+      );
     });
   });
 
@@ -368,15 +345,14 @@ describe("emoji preset", () => {
       gitCommit("📦 build");
       gitCommit("⚡️ perfo");
       gitCommit("🛠 improvement");
-      jest.setMock("../src/config/config", {
+      setConfig({
         language: "it"
       });
-      return getChangelog().then(changelog => {
-        expect(changelog).toContainString("### ⚡️ Performance");
-        expect(changelog).toContainString("### ✨ Nuove Funzionalità");
-        expect(changelog).toContainString("### 🛠 Migliorie");
-        expect(changelog).not.toContainString("### ✨ Features");
-      });
+      const changelog = getChangelog();
+      expect(changelog).toContainString("### ⚡️ Performance");
+      expect(changelog).toContainString("### ✨ Nuove Funzionalità");
+      expect(changelog).toContainString("### 🛠 Migliorie");
+      expect(changelog).not.toContainString("### ✨ Features");
     });
   });
 });

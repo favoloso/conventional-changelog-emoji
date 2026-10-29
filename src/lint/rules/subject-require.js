@@ -5,7 +5,7 @@ const linter = require("./shared/linter");
  */
 module.exports = {
   name: "subject-require",
-  rule: function(ctx, options, tokens) {
+  rule: function (ctx, options, tokens) {
     if (tokens.subject) return null;
 
     return linter.error(tokens.header);

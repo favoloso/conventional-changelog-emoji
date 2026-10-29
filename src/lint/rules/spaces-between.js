@@ -3,7 +3,7 @@
  */
 module.exports = {
   name: "spaces-between",
-  rule: function(ctx, options, tokens) {
+  rule: function (ctx, options, tokens) {
     if (!tokens.spaces) return;
 
     if (tokens.spaces === " ") return null;

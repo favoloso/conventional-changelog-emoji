@@ -1,7 +1,5 @@
 module.exports = {
-  headings: {
-    /** Already provided in emoji-groups */
-  },
+  headings: {/** Already provided in emoji-groups */},
   rules: {
     "body-leading-blank": "Body should begin with a leading blank line.",
     "emoji-from-type": `Type Alias "$0" is not allowed. It should be one of: $1.`,

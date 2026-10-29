@@ -1,10 +1,19 @@
 # @favoloso/conventional-changelog-emoji
 
-[![Travis CI](https://img.shields.io/travis/com/favoloso/conventional-changelog-emoji.svg)](https://travis-ci.com/favoloso/conventional-changelog-emoji)
-[![Coveralls](https://img.shields.io/coveralls/github/favoloso/conventional-changelog-emoji/master.svg)](https://coveralls.io/github/favoloso/conventional-changelog-emoji)
+[![CI](https://github.com/favoloso/conventional-changelog-emoji/actions/workflows/ci.yml/badge.svg)](https://github.com/favoloso/conventional-changelog-emoji/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/@favoloso/conventional-changelog-emoji.svg)](https://www.npmjs.com/package/@favoloso/conventional-changelog-emoji)
 
 Conventional Changelog with Emojis support 🎉
+
+The package has no runtime dependencies.
+
+## Requirements
+
+- `conventional-changelog` v8+ and `conventional-recommended-bump` v12+
+  (i.e. [`@release-it/conventional-changelog`](https://github.com/release-it/conventional-changelog) v12+ and `release-it` v21+).
+- Node.js v22+ (required by the tools above).
+
+> Older tools (Handlebars-based `conventional-changelog-writer` v8 and below) are supported by v0.10.x.
 
 ## Installation
 
@@ -27,7 +36,7 @@ conventional-changelog -p @favoloso/emoji -i CHANGELOG.md -s
 ### Usage with `release-it`
 
 You can use [conventional-changelog
-plugin](https://github.com/release-it/conventional-changelog) (v11+) with the
+plugin](https://github.com/release-it/conventional-changelog) with the
 `@favoloso/emoji` preset.
 
 ```json
@@ -50,22 +59,17 @@ format (i.e. `feat: Add a magic feature`) to corresponding emoji (i.e. `✨ Add 
 checks and applies correct casing (i.e. `lower-case`) and many more, as configured
 by [**Linter Rules**](https://github.com/favoloso/conventional-changelog-emoji/wiki/Linter-Rules).
 
-To use it, install [husky](https://github.com/typicode/husky)
+To use it, install and initialize [husky](https://github.com/typicode/husky)
 
 ```sh
 yarn add --dev husky
+yarn husky init
 ```
 
-Now in your package.json add:
+Now add the `.husky/commit-msg` hook:
 
-```json
-{
-  "husky": {
-    "hooks": {
-      "commit-msg": "emoji-commit-lint"
-    }
-  }
-}
+```sh
+HUSKY_GIT_PARAMS="$1" npx emoji-commit-lint
 ```
 
 Now linter will check your commits. Any commit like `<type>: <msg>` will be automatically
@@ -75,7 +79,9 @@ transformed with related emoji. See _Available Emojis_ to see available **types*
 
 The package works as-is, but its behaviour may be customized with the following options.
 
-> _Note:_ This package supports [`cosmiconfig`](https://github.com/davidtheclark/cosmiconfig#readme) to provide configuration options with `favolosoEmoji` module name.
+> _Note:_ Configuration is searched starting from the current directory up to the user home, in the following places (the first found wins):
+> `favolosoEmoji` property in `package.json`, `.favolosoEmojirc` (JSON), `.favolosoEmojirc.json`, `.favolosoEmojirc.js`, `favolosoEmoji.config.js`.
+> YAML files (`.favolosoEmojirc`, `.favolosoEmojirc.yaml`, `.favolosoEmojirc.yml`) are not supported anymore: please convert them to JSON.
 
 - **`emojis`** (default: `{}`)
 
@@ -126,14 +132,14 @@ The package works as-is, but its behaviour may be customized with the following 
 🚨 |  | `breaking` |  | major | ✅ | 🚨 Breaking Changes | 10
 ✨ | 🌟, 💫, 🌠 | `feat` |  | minor | ✅ | ✨ Features | 20
 🔒 |  | `security` |  | patch | ✅ | 🔒 Security | 25
-🛠 |  | `improvement` | `imp` | patch | ✅ | 🛠 Improvements | 30
+🛠️ |  | `improvement` | `imp` | patch | ✅ | 🛠️ Improvements | 30
 ⚡️ |  | `perf` | `performance` | patch | ✅ | ⚡️ Performance | 35
 🐛 | 🐞 | `fix` |  | patch | ✅ | 🐛 Bug Fixes | 40
 📚 | 📖 | `docs` | `doc` | patch | ✅ | 📚 Documentation | 50
-🏗 | ⚙️ | `chore` | `chores` | patch | ✅ | 🏗 Chore | 60
+🏗️ | ⚙️ | `chore` | `chores` | patch | ✅ | 🏗️ Chore | 60
+🎨 | 💄 | `style` | `cleanup` | patch |  | 🎨 Style | 90
 ♻️ |  | `refactor` |  | patch |  | ♻️ Refactoring | 90
 🚦 | ✅ | `test` |  | patch |  | 🚦 Test | 90
-🎨 | 💄 | `style` | `cleanup` | patch |  | 🎨 Style | 90
 📦 |  | `build` | `deps` | patch |  | 📦 Build | 90
 🔖 |  | `release` |  | patch |  | 🔖 Release | 90
 🚧 |  | `wip` |  | patch |  | 🚧 Wip | 90

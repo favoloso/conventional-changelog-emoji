@@ -5,7 +5,7 @@ const linter = require("./shared/linter");
  */
 module.exports = {
   name: "emoji-require",
-  rule: function(ctx, options, tokens) {
+  rule: function (ctx, options, tokens) {
     if (tokens.emoji) return null;
 
     return linter.error(tokens.header);
