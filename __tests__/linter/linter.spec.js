@@ -222,20 +222,20 @@ describe("linter", () => {
       setLintRules();
       const linted = lint("🌟 My magical commit\nleading?");
       expect(formatLintIssues(linted)).toMatchInlineSnapshot(`
-"Commit do not lints based on your \\"emoji-commit-lint\\" rules:
+       "Commit do not lints based on your "emoji-commit-lint" rules:
 
-• 🔴 [body-leading-blank] Body should begin with a leading blank line."
-`);
+       • 🔴 [body-leading-blank] Body should begin with a leading blank line."
+      `);
     });
 
     it("should print warnings", () => {
       setLintRules({ "body-leading-blank": [1] });
       const linted = lint("🌟 My magical commit\nleading?");
       expect(formatLintIssues(linted)).toMatchInlineSnapshot(`
-"Commit do not lints based on your \\"emoji-commit-lint\\" rules:
+       "Commit do not lints based on your "emoji-commit-lint" rules:
 
-• ⚠️ [body-leading-blank] Body should begin with a leading blank line."
-`);
+       • ⚠️ [body-leading-blank] Body should begin with a leading blank line."
+      `);
     });
 
     it("should provide a clean success message", () => {
@@ -250,12 +250,12 @@ describe("linter", () => {
       setLintRules();
       const linted = lint("fi: A fix");
       expect(formatLintIssues(linted)).toMatchInlineSnapshot(`
-"Commit do not lints based on your \\"emoji-commit-lint\\" rules:
+       "Commit do not lints based on your "emoji-commit-lint" rules:
 
-• 🔴 [emoji-from-type] Type Alias \\"fi\\" is not allowed. It should be one of: breaking, feat, security, improvement, perf, fix, docs, chore, style, refactor, test, build, release, wip.
-• 🔴 [emoji-require] Emoji is required, but it's not present in \\"fi: A fix\\".
-• 🔴 [subject-require] Subject is required, but it's not present in \\"fi: A fix\\"."
-`);
+       • 🔴 [emoji-from-type] Type Alias "fi" is not allowed. It should be one of: breaking, feat, security, improvement, perf, fix, docs, chore, style, refactor, test, build, release, wip.
+       • 🔴 [emoji-require] Emoji is required, but it's not present in "fi: A fix".
+       • 🔴 [subject-require] Subject is required, but it's not present in "fi: A fix"."
+      `);
     });
   });
 

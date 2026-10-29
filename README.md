@@ -5,10 +5,15 @@
 
 Conventional Changelog with Emojis support 🎉
 
-The package has no runtime dependencies. It works both with legacy
-(`conventional-changelog-core`, `conventional-recommended-bump` up to v6) and
-modern conventional-changelog tools (`conventional-changelog` v5+,
-`conventional-recommended-bump` v7+, i.e. `@release-it/conventional-changelog` v8+).
+The package has no runtime dependencies.
+
+## Requirements
+
+- `conventional-changelog` v8+ and `conventional-recommended-bump` v12+
+  (i.e. [`@release-it/conventional-changelog`](https://github.com/release-it/conventional-changelog) v12+ and `release-it` v21+).
+- Node.js v22+ (required by the tools above).
+
+> Older tools (Handlebars-based `conventional-changelog-writer` v8 and below) are supported by v0.10.x.
 
 ## Installation
 
@@ -54,22 +59,17 @@ format (i.e. `feat: Add a magic feature`) to corresponding emoji (i.e. `✨ Add 
 checks and applies correct casing (i.e. `lower-case`) and many more, as configured
 by [**Linter Rules**](https://github.com/favoloso/conventional-changelog-emoji/wiki/Linter-Rules).
 
-To use it, install [husky](https://github.com/typicode/husky)
+To use it, install and initialize [husky](https://github.com/typicode/husky)
 
 ```sh
 yarn add --dev husky
+yarn husky init
 ```
 
-Now in your package.json add:
+Now add the `.husky/commit-msg` hook:
 
-```json
-{
-  "husky": {
-    "hooks": {
-      "commit-msg": "emoji-commit-lint"
-    }
-  }
-}
+```sh
+HUSKY_GIT_PARAMS="$1" npx emoji-commit-lint
 ```
 
 Now linter will check your commits. Any commit like `<type>: <msg>` will be automatically

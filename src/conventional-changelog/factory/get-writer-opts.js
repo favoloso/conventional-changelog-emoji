@@ -2,19 +2,20 @@ const emoji = require("../../emoji/emoji");
 const config = require("../../config/config");
 const translator = require("../../translation/translator")();
 const commitGroupsSort = require("./commit-groups-sort");
+const template = require("./template");
 
 /**
- * Factory to build conventional-changelog `writerOpts`.
+ * Factory to build conventional-changelog-writer (v9+) options.
  */
 module.exports = function getWriterOpts() {
   let breakingHeading = emoji.list.find(e => e.type === "breaking").heading;
 
   return {
     /**
-     * Commits are not modified (they are immutable in
-     * conventional-changelog-writer v6+): a new commit is returned instead.
+     * Commits are immutable: only changed fields are returned, and they
+     * are merged into the commit by conventional-changelog-writer.
      */
-    transform(commit, context) {
+    transform(commit, context, options) {
       let issues = [];
 
       // Skip without emoji
@@ -24,10 +25,13 @@ module.exports = function getWriterOpts() {
       if (group == null || !group.inChangelog) return null;
 
       const transformed = {
-        ...commit,
         type: translator.translateHeading(group),
         notes: commit.notes.map(note => ({ ...note, title: breakingHeading }))
       };
+
+      if (commit.committerDate) {
+        transformed.committerDate = options.formatDate(commit.committerDate);
+      }
 
       if (config.showEmojiPerCommit) {
         transformed.showEmoji = commit.emoji;
@@ -74,6 +78,7 @@ module.exports = function getWriterOpts() {
 
       return transformed;
     },
+    template,
     groupBy: "type",
     commitGroupsSort,
     commitsSort: ["scope", "subject"],
