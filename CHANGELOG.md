@@ -1,3 +1,16 @@
+# Changelog
+
+# [0.11.0](https://github.com/favoloso/conventional-changelog-emoji/compare/v0.10.0...v0.11.0) (2026-10-29)
+
+### 🚨 Breaking Changes
+
+- Remove all runtime dependencies ([7e325e6](https://github.com/favoloso/conventional-changelog-emoji/commit/7e325e6))
+- Support only conventional-changelog v8+ and update dev dependencies ([c7c3a30](https://github.com/favoloso/conventional-changelog-emoji/commit/c7c3a30))
+
+### 🐛 Bug Fixes
+
+- Support windows emojis renderer ([2258493](https://github.com/favoloso/conventional-changelog-emoji/commit/2258493))
+
 # [0.10.0](https://github.com/favoloso/conventional-changelog-emoji/compare/v0.9.0...v0.10.0) (2019-10-24)
 
 ### ✨ Features
