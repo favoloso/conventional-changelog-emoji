@@ -1,4 +1,7 @@
-const emojiRegex = require("emoji-regex")();
+const emojiRegex = require("../../emoji/emoji-regex").createEmojiRegex({
+  strict: true,
+  global: true
+});
 const translator = require("../../translation/translator")();
 
 /**

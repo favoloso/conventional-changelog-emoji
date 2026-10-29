@@ -1,5 +1,3 @@
-const _ = require("lodash");
-
 module.exports = function toCase(wanted, message) {
   switch (wanted) {
     case "upper-case":

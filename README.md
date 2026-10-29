@@ -1,10 +1,14 @@
 # @favoloso/conventional-changelog-emoji
 
-[![Travis CI](https://img.shields.io/travis/com/favoloso/conventional-changelog-emoji.svg)](https://travis-ci.com/favoloso/conventional-changelog-emoji)
-[![Coveralls](https://img.shields.io/coveralls/github/favoloso/conventional-changelog-emoji/master.svg)](https://coveralls.io/github/favoloso/conventional-changelog-emoji)
+[![CI](https://github.com/favoloso/conventional-changelog-emoji/actions/workflows/ci.yml/badge.svg)](https://github.com/favoloso/conventional-changelog-emoji/actions/workflows/ci.yml)
 [![npm](https://img.shields.io/npm/v/@favoloso/conventional-changelog-emoji.svg)](https://www.npmjs.com/package/@favoloso/conventional-changelog-emoji)
 
 Conventional Changelog with Emojis support 🎉
+
+The package has no runtime dependencies. It works both with legacy
+(`conventional-changelog-core`, `conventional-recommended-bump` up to v6) and
+modern conventional-changelog tools (`conventional-changelog` v5+,
+`conventional-recommended-bump` v7+, i.e. `@release-it/conventional-changelog` v8+).
 
 ## Installation
 
@@ -27,7 +31,7 @@ conventional-changelog -p @favoloso/emoji -i CHANGELOG.md -s
 ### Usage with `release-it`
 
 You can use [conventional-changelog
-plugin](https://github.com/release-it/conventional-changelog) (v11+) with the
+plugin](https://github.com/release-it/conventional-changelog) with the
 `@favoloso/emoji` preset.
 
 ```json
@@ -75,7 +79,9 @@ transformed with related emoji. See _Available Emojis_ to see available **types*
 
 The package works as-is, but its behaviour may be customized with the following options.
 
-> _Note:_ This package supports [`cosmiconfig`](https://github.com/davidtheclark/cosmiconfig#readme) to provide configuration options with `favolosoEmoji` module name.
+> _Note:_ Configuration is searched starting from the current directory up to the user home, in the following places (the first found wins):
+> `favolosoEmoji` property in `package.json`, `.favolosoEmojirc` (JSON), `.favolosoEmojirc.json`, `.favolosoEmojirc.js`, `favolosoEmoji.config.js`.
+> YAML files (`.favolosoEmojirc`, `.favolosoEmojirc.yaml`, `.favolosoEmojirc.yml`) are not supported anymore: please convert them to JSON.
 
 - **`emojis`** (default: `{}`)
 
@@ -126,14 +132,14 @@ The package works as-is, but its behaviour may be customized with the following 
 🚨 |  | `breaking` |  | major | ✅ | 🚨 Breaking Changes | 10
 ✨ | 🌟, 💫, 🌠 | `feat` |  | minor | ✅ | ✨ Features | 20
 🔒 |  | `security` |  | patch | ✅ | 🔒 Security | 25
-🛠 |  | `improvement` | `imp` | patch | ✅ | 🛠 Improvements | 30
+🛠️ |  | `improvement` | `imp` | patch | ✅ | 🛠️ Improvements | 30
 ⚡️ |  | `perf` | `performance` | patch | ✅ | ⚡️ Performance | 35
 🐛 | 🐞 | `fix` |  | patch | ✅ | 🐛 Bug Fixes | 40
 📚 | 📖 | `docs` | `doc` | patch | ✅ | 📚 Documentation | 50
-🏗 | ⚙️ | `chore` | `chores` | patch | ✅ | 🏗 Chore | 60
+🏗️ | ⚙️ | `chore` | `chores` | patch | ✅ | 🏗️ Chore | 60
+🎨 | 💄 | `style` | `cleanup` | patch |  | 🎨 Style | 90
 ♻️ |  | `refactor` |  | patch |  | ♻️ Refactoring | 90
 🚦 | ✅ | `test` |  | patch |  | 🚦 Test | 90
-🎨 | 💄 | `style` | `cleanup` | patch |  | 🎨 Style | 90
 📦 |  | `build` | `deps` | patch |  | 📦 Build | 90
 🔖 |  | `release` |  | patch |  | 🔖 Release | 90
 🚧 |  | `wip` |  | patch |  | 🚧 Wip | 90

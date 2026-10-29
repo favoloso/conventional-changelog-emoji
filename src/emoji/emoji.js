@@ -1,7 +1,35 @@
 const emojiGroups = require("./emoji-groups");
 const emojiConfigLoader = require("./emoji-config-loader");
 
-const emojiRegex = require("emoji-regex/text")();
+const { createEmojiRegex } = require("./emoji-regex");
+
+const emojiRegex = createEmojiRegex();
+
+/**
+ * Removes variation selectors (U+FE0E / U+FE0F), so that i.e. `🛠` and `🛠️`
+ * are considered the same emoji. Some systems (i.e. Windows) render the first
+ * one as text, so both are commonly found in commits.
+ */
+function normalizeEmoji(emoji) {
+  return typeof emoji === "string"
+    ? emoji.replace(/[\uFE0E\uFE0F]/g, "")
+    : emoji;
+}
+
+function isSameEmoji(emoji, other) {
+  return emoji != null && normalizeEmoji(emoji) === normalizeEmoji(other);
+}
+
+function hasEmoji(emojis, emoji) {
+  return emojis.some(e => isSameEmoji(e, emoji));
+}
+
+/**
+ * Escapes regex syntax characters (valid even with `u` flag).
+ */
+function escapeRegex(text) {
+  return text.replace(/[\^$\\.*+?()[\]{}|\/]/g, "\\$&");
+}
 
 /**
  * Finds all emojis (i.e. all features by `minor`, or all breakings by `major`)
@@ -18,7 +46,7 @@ function emojisByBump(bump) {
  * Finds original emoji starting from aliased `emoji` provided
  */
 function findAliased(emoji) {
-  const base = groups.find(e => e.aliases.indexOf(emoji) !== -1);
+  const base = groups.find(e => hasEmoji(e.aliases, emoji));
   if (base) return base.emoji;
   return null;
 }
@@ -27,10 +55,10 @@ function findAliased(emoji) {
  * Finds replacing emoji
  */
 function findEmoji(emoji) {
-  const original = groups.find(e => e.emoji === emoji);
+  const original = groups.find(e => isSameEmoji(e.emoji, emoji));
   if (original) return original;
 
-  const aliased = groups.find(e => e.aliases.indexOf(emoji) !== -1);
+  const aliased = groups.find(e => hasEmoji(e.aliases, emoji));
   if (aliased) return aliased;
 
   return null;
@@ -50,7 +78,7 @@ function findEmojiByType(type) {
  */
 function findType(emoji) {
   const group = groups.find(
-    e => e.emoji === emoji || e.aliases.indexOf(emoji) !== -1
+    e => isSameEmoji(e.emoji, emoji) || hasEmoji(e.aliases, emoji)
   );
   if (group) return group.type;
   return null;
@@ -85,18 +113,21 @@ const groups = emojiConfigLoader(baseGroups).map(normalizeEmojiGroup);
 
 /**
  * We create a regex based on provided Emoji (and their Emoji Aliases)
- * in order to fix bugs with `emoji-regex` regex, atleast to be sure
- * changelog emojis are always available.
+ * in order to be sure changelog emojis are always available, even if
+ * they are not recognized by the generic emoji regex.
+ * Variation selectors are optional (i.e. both `🛠` and `🛠️` are matched).
  */
 const groupsEmojiRegex = groups
   .reduce((emojis, g) => {
     emojis.push(g.emoji, ...g.aliases);
     return emojis;
   }, [])
+  .map(emoji => `${escapeRegex(normalizeEmoji(emoji))}[\\uFE0E\\uFE0F]?`)
   .join("|");
 
 const headerRegex = new RegExp(
-  `^(${groupsEmojiRegex}|${emojiRegex.source})(\\s*)(.*)$`
+  `^(${groupsEmojiRegex}|${emojiRegex.source})(\\s*)(.*)$`,
+  "u"
 );
 
 module.exports = {
@@ -107,6 +138,8 @@ module.exports = {
   breakingEmojis: emojisByBump("major"),
   releaseEmoji: groups.find(g => g.type === "release"),
   findAliased,
+  isSameEmoji,
+  hasEmoji,
   findType,
   findEmoji,
   findEmojiByType

@@ -1,7 +1,6 @@
-const cosmiconfig = require("cosmiconfig");
+const searchConfig = require("./search-config");
 
-const explorer = cosmiconfig("favolosoEmoji");
-const loadedConfig = explorer.searchSync();
+const loadedConfig = searchConfig();
 const config = {
   ...require("./config-default"),
   ...(loadedConfig ? loadedConfig.config : null)

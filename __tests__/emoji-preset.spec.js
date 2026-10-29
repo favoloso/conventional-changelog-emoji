@@ -165,6 +165,42 @@ describe("emoji preset", () => {
     });
   });
 
+  describe("preset export", () => {
+    it("should be a function returning both modern and legacy options", () => {
+      const createPreset = require("..");
+      expect(typeof createPreset).toBe("function");
+      return createPreset().then(preset => {
+        expect(preset.parser).toBe(preset.parserOpts);
+        expect(preset.writer).toBe(preset.writerOpts);
+        expect(preset.whatBump).toBe(preset.recommendedBumpOpts.whatBump);
+        expect(preset.conventionalChangelog).toEqual({
+          parserOpts: preset.parserOpts,
+          writerOpts: preset.writerOpts
+        });
+      });
+    });
+
+    it("should support node-style callbacks", done => {
+      require("..")((err, preset) => {
+        expect(err).toBeNull();
+        expect(preset.recommendedBumpOpts.whatBump).toBeInstanceOf(Function);
+        done();
+      });
+    });
+  });
+
+  it("should group emojis with or without variation selector together", () => {
+    gitCommit("🛠 senza selettore");
+    gitCommit("🛠️ con selettore");
+    gitCommit("🏗 chore senza selettore");
+    return getChangelog().then(changelog => {
+      expect(changelog.match(/### 🛠️ Improvements/g)).toHaveLength(1);
+      expect(changelog).toContainString("* senza selettore");
+      expect(changelog).toContainString("* con selettore");
+      expect(changelog).toContainString("* chore senza selettore");
+    });
+  });
+
   describe("version bump", () => {
     it("should recommend patch for fixes only", () => {
       gitCommit("🐛 fixed a bug");
