@@ -1,6 +1,6 @@
 const fs = require("fs");
-const lintCommitMessageOrThrow = require("./lint-commit-message")
-  .lintCommitMessageOrThrow;
+const lintCommitMessageOrThrow =
+  require("./lint-commit-message").lintCommitMessageOrThrow;
 
 module.exports = function lintCommitCommand() {
   try {

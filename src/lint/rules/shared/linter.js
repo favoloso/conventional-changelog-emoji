@@ -14,8 +14,8 @@ function resolveRuleOptions(config, rule) {
     options === true
       ? [Severity.error]
       : options === false
-      ? [Severity.ignore]
-      : options;
+        ? [Severity.ignore]
+        : options;
 
   return {
     severity,

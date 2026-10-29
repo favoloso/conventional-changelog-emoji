@@ -8,7 +8,7 @@ const fixableRegex = new RegExp(`^([a-zA-Z]+)\\:`, "i");
  */
 module.exports = {
   name: "emoji-from-type",
-  rule: function(ctx, options, tokens) {
+  rule: function (ctx, options, tokens) {
     const matches = tokens.header.match(fixableRegex);
     if (!matches) return null;
 

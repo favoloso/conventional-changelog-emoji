@@ -13,8 +13,8 @@ function setLintRules(rules) {
 }
 
 function lint(message) {
-  const lintCommitMessage = require("../../src/lint/lint-commit-message")
-    .lintCommitMessage;
+  const lintCommitMessage =
+    require("../../src/lint/lint-commit-message").lintCommitMessage;
   return lintCommitMessage(message);
 }
 
@@ -62,8 +62,8 @@ describe("linter", () => {
   });
 
   it("should throw if rules are violated", () => {
-    const lintCommitMessageOrThrow = require("../../src/lint/lint-commit-message")
-      .lintCommitMessageOrThrow;
+    const lintCommitMessageOrThrow =
+      require("../../src/lint/lint-commit-message").lintCommitMessageOrThrow;
     setLintRules({ "emoji-require": true });
     expect(() => lintCommitMessageOrThrow("doca: Aaaa")).toThrow();
   });

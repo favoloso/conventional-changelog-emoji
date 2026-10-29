@@ -8,7 +8,7 @@ const linter = require("./shared/linter");
  */
 module.exports = {
   name: "emoji-known",
-  rule: function(ctx, options, tokens) {
+  rule: function (ctx, options, tokens) {
     if (!tokens.emoji) return null;
 
     // Allows for aliases, so find replacement and if available use it.

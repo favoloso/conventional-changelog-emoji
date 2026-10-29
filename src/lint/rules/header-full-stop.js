@@ -6,7 +6,7 @@ const linter = require("./shared/linter");
 module.exports = {
   name: "header-full-stop",
   args: ["never"],
-  rule: function(ctx, options, tokens) {
+  rule: function (ctx, options, tokens) {
     if (tokens.type === "release") return null;
 
     const fullStop = tokens.header.endsWith(".");

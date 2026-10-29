@@ -21,7 +21,7 @@ function getHeader(commit) {
   return lines[0];
 }
 
-module.exports = function(commit) {
+module.exports = function (commit) {
   if (ignoreCommit(commit)) return null;
 
   const header = getHeader(commit);
